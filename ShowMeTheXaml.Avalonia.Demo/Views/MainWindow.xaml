@@ -1,0 +1,56 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:ShowMeTheXaml.Avalonia.Demo.ViewModels;assembly=ShowMeTheXaml.Avalonia.Demo"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:ShowMeTheXaml.Avalonia;assembly=ShowMeTheXaml.Avalonia"
+        xmlns:showMeTheXaml="clr-namespace:ShowMeTheXaml;assembly=ShowMeTheXaml.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ShowMeTheXaml.Avalonia.Demo.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="ShowMeTheXaml.Avalonia.Demo">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <StackPanel>
+        <showMeTheXaml:XamlDisplay UniqueId="123">
+            <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </showMeTheXaml:XamlDisplay>
+        <showMeTheXaml:XamlDisplay UniqueId="1">
+            <Canvas Background="Yellow" Width="300" Height="400">
+                <Rectangle Fill="Blue" Width="63" Height="41" Canvas.Left="40" Canvas.Top="31">
+                    <Rectangle.OpacityMask>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0" Color="Black" />
+                                <GradientStop Offset="1" Color="Transparent" />
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <Ellipse Fill="Green" Width="58" Height="58" Canvas.Left="88" Canvas.Top="100" />
+                <Path Fill="Orange" Data="M 0,0 c 0,0 50,0 50,-50 c 0,0 50,0 50,50 h -50 v 50 l -50,-50 Z"
+                      Canvas.Left="30" Canvas.Top="250" />
+                <Path Fill="OrangeRed" Canvas.Left="180" Canvas.Top="250">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0" IsClosed="True">
+                                <QuadraticBezierSegment Point1="50,0" Point2="50,-50" />
+                                <QuadraticBezierSegment Point1="100,-50" Point2="100,0" />
+                                <LineSegment Point="50,0" />
+                                <LineSegment Point="50,50" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Line StartPoint="120,185" EndPoint="30,115" Stroke="Red" StrokeThickness="2" />
+                <Polygon Points="75,0 120,120 0,45 150,45 30,120" Stroke="DarkBlue" StrokeThickness="1" Fill="Violet"
+                         Canvas.Left="150" Canvas.Top="31" />
+                <Polyline Points="0,0 65,0 78,-26 91,39 104,-39 117,13 130,0 195,0" Stroke="Brown" Canvas.Left="30"
+                          Canvas.Top="350" />
+            </Canvas>
+        </showMeTheXaml:XamlDisplay>
+    </StackPanel>
+
+</Window>
