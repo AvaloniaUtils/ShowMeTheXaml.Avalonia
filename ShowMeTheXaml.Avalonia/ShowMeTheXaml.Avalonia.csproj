@@ -4,6 +4,16 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Title>ShowMeTheXaml.Avalonia</Title>
+        <Authors>SKProCH</Authors>
+        <Description>Package contains Avalonia control that can display xaml code from ShowMeTheXaml.Avalonia.Generator</Description>
+        <PackageProjectUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <PackageTags>avalonia avaloniaui</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
