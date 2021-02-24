@@ -3,7 +3,7 @@ A Avalonia component making it easy to show the corresponding XAML for custom st
 It was built out of a need to shows the XAML for the theme library Material.Avalonia.
 
 ## Getting started
-1. Install `ShowMeTheXaml.Avalonia.Generator` (nuget package)[]. This will also install the `ShowMeTheXaml.Avalonia` (nuget package)[] as well.
+1. Install `ShowMeTheXaml.Avalonia.Generator` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia.Generator/). This will also install the `ShowMeTheXaml.Avalonia` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia/) as well.
 2. Add the following code to csproj file
 ```c#
 <ItemGroup>
@@ -33,4 +33,19 @@ Or call `XamlDisplayInternalData.RegisterXamlDisplayData()` on your program star
 <showMeTheXaml:XamlDisplay UniqueId="123">
     <!-- Your code here -->
 </showMeTheXaml:XamlDisplay>
+```
+
+## Compiling sources
+1. Clone this repo:
+```
+git clone https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git
+```
+2. Navigate to repo folder
+3. Fetch all submodules:
+```
+git submodule update --init --recursive
+```
+4. Compile project:
+```
+dotnet build
 ```
