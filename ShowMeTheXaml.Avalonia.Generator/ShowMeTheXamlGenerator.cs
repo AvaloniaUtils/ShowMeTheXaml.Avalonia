@@ -24,7 +24,21 @@ namespace ShowMeTheXaml.Avalonia {
         public void Execute(GeneratorExecutionContext context) {
             _compilation = (CSharpCompilation) context.Compilation;
             Dictionary<string, string> codeDictionary = new Dictionary<string, string>();
-            foreach (var markupFile in context.AdditionalFiles.Where(text => text.Path.EndsWith(".xaml") || text.Path.EndsWith(".axaml"))) {
+            var files = context.AdditionalFiles.Where(text => text.Path.EndsWith(".xaml") || text.Path.EndsWith(".axaml")).ToList();
+            if (files.Count == 0)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    new DiagnosticDescriptor(
+                        "XD0003",
+                        "No xaml files detected. Consider read \"Getting started\" at our github.",
+                        "Add all xaml and axaml files as AdditionalFiles in csproj",
+                        "Usage",
+                        DiagnosticSeverity.Error,
+                        true
+                    ),
+                    Location.None));
+            }
+            foreach (var markupFile in files) {
                 var xamlDisplayInfos = ExtractFromXaml(markupFile)
                                       .OrderByDescending(info => info.LinePosition.Line).ThenByDescending(info => info.LinePosition.Line)
                                       .ToList();
