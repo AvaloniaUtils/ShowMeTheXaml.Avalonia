@@ -11,7 +11,20 @@ It was built out of a need to shows the XAML for the theme library Material.Aval
     <AdditionalFiles Include="**\*.axaml"/>
 </ItemGroup>
 ```
-3. Initialize `DisplayContent` dictionary in `XamlDisplay` class 
+3. Add XamlDisplay style to your app in `App.xaml`. See the example of `App.xaml`:
+```xaml
+<Application ...>
+    ...
+    <Application.Styles>
+        ...
+        <!-- This line \/ required -->
+        <StyleInclude Source="avares://ShowMeTheXaml.Avalonia/XamlDisplay.xaml"/>
+        <!-- This line /\ required -->
+    </Application.Styles>
+    ...
+</Application>
+```
+4. Initialize `DisplayContent` dictionary in `XamlDisplay` class 
 
 Add `UseXamlDisplay()` in `Program.cs` to `BuildAvaloniaApp` method.
 It should look like this:
@@ -28,7 +41,7 @@ public static AppBuilder BuildAvaloniaApp()
 
 Or call `XamlDisplayInternalData.RegisterXamlDisplayData()` on your program startup.  
 
-4. Add `XamlDisplay` in your xaml. And set unique `UniqueId` property value
+5. Add `XamlDisplay` in your xaml. Set unique `UniqueId` property value. Example:
 ```xaml
 <showMeTheXaml:XamlDisplay UniqueId="123">
     <!-- Your code here -->
