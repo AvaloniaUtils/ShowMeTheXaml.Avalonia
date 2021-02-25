@@ -25,8 +25,7 @@ namespace ShowMeTheXaml.Avalonia {
             _compilation = (CSharpCompilation) context.Compilation;
             Dictionary<string, string> codeDictionary = new Dictionary<string, string>();
             var files = context.AdditionalFiles.Where(text => text.Path.EndsWith(".xaml") || text.Path.EndsWith(".axaml")).ToList();
-            if (files.Count == 0)
-            {
+            if (files.Count == 0) {
                 context.ReportDiagnostic(Diagnostic.Create(
                     new DiagnosticDescriptor(
                         "XD0003",
@@ -38,6 +37,7 @@ namespace ShowMeTheXaml.Avalonia {
                     ),
                     Location.None));
             }
+
             foreach (var markupFile in files) {
                 var xamlDisplayInfos = ExtractFromXaml(markupFile)
                                       .OrderByDescending(info => info.LinePosition.Line).ThenByDescending(info => info.LinePosition.Line)
@@ -114,11 +114,25 @@ namespace ShowMeTheXaml.Avalonia {
 
         private static string GetContent(SourceText sources, XamlDisplayPosition xamlDisplayPosition) {
             var content = sources.GetSubText(sources.Lines.GetTextSpan(xamlDisplayPosition.ContentSpan)).ToString();
-            
+
             // Remove empty lines
             content = Regex.Replace(content, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
             content = content.TrimEnd('\r', '\n', ' ');
-            
+
+            // Remove unnecessary indentation
+            var lines = content.Split('\n', '\r').Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+            var minimum = int.MaxValue;
+            foreach (var line in lines) {
+                if (line.Length == 0) continue;
+                minimum = Math.Min(minimum, line.Length - line.TrimStart().Length);
+                if (minimum == 0) break;
+            }
+
+            if (minimum != 0 && minimum != int.MaxValue) {
+                content = string.Join(Environment.NewLine, lines.Select(s => s.Substring(minimum)));
+            }
+
+
             return content;
         }
 
@@ -134,7 +148,7 @@ namespace ShowMeTheXaml.Avalonia {
         private string GenerateSources(Dictionary<string, string> codeDictionary) {
             var values = string.Join("\n", codeDictionary.Select(pair => $"            {{\"{pair.Key}\", {ToLiteral(pair.Value)}}},"));
             return
-$@"using System.Collections.Generic;
+                $@"using System.Collections.Generic;
 using Avalonia.Controls;
 using ShowMeTheXaml.Avalonia;
 
@@ -164,35 +178,60 @@ namespace ShowMeTheXaml {{
     }}
 }}";
         }
-        
+
         static string ToLiteral(string input) {
             StringBuilder literal = new StringBuilder(input.Length + 2);
             literal.Append("\"");
             foreach (var c in input) {
                 switch (c) {
-                    case '\'': literal.Append(@"\'"); break;
-                    case '\"': literal.Append("\\\""); break;
-                    case '\\': literal.Append(@"\\"); break;
-                    case '\0': literal.Append(@"\0"); break;
-                    case '\a': literal.Append(@"\a"); break;
-                    case '\b': literal.Append(@"\b"); break;
-                    case '\f': literal.Append(@"\f"); break;
-                    case '\n': literal.Append(@"\n"); break;
-                    case '\r': literal.Append(@"\r"); break;
-                    case '\t': literal.Append(@"\t"); break;
-                    case '\v': literal.Append(@"\v"); break;
+                    case '\'':
+                        literal.Append(@"\'");
+                        break;
+                    case '\"':
+                        literal.Append("\\\"");
+                        break;
+                    case '\\':
+                        literal.Append(@"\\");
+                        break;
+                    case '\0':
+                        literal.Append(@"\0");
+                        break;
+                    case '\a':
+                        literal.Append(@"\a");
+                        break;
+                    case '\b':
+                        literal.Append(@"\b");
+                        break;
+                    case '\f':
+                        literal.Append(@"\f");
+                        break;
+                    case '\n':
+                        literal.Append(@"\n");
+                        break;
+                    case '\r':
+                        literal.Append(@"\r");
+                        break;
+                    case '\t':
+                        literal.Append(@"\t");
+                        break;
+                    case '\v':
+                        literal.Append(@"\v");
+                        break;
                     default:
                         // ASCII printable character
                         if (c >= 0x20 && c <= 0x7e) {
                             literal.Append(c);
                             // As UTF16 escaped character
-                        } else {
-                            literal.Append(@"\u");
-                            literal.Append(((int)c).ToString("x4"));
                         }
+                        else {
+                            literal.Append(@"\u");
+                            literal.Append(((int) c).ToString("x4"));
+                        }
+
                         break;
                 }
             }
+
             literal.Append("\"");
             return literal.ToString();
         }
@@ -220,7 +259,8 @@ namespace ShowMeTheXaml {{
             var regexMatch = Regex.Match(text.Substring(startPosition), @"([^ \/>]*)", RegexOptions.Singleline);
             var elementFullnameEscaped = Regex.Escape(regexMatch.Groups[0].Value);
 
-            var pattern = $@"((?<start><{elementFullnameEscaped}[^\/]*?>)(?<content>.*)(?<end><\/{elementFullnameEscaped}>))|(?<startend><{elementFullnameEscaped}.*?\/>)";
+            var pattern =
+                $@"((?<start><{elementFullnameEscaped}[^\/]*?>)(?<content>.*)(?<end><\/{elementFullnameEscaped}>))|(?<startend><{elementFullnameEscaped}.*?\/>)";
             var regexText = text.Substring(startPosition - 1);
             var match = Regex.Match(regexText, pattern, RegexOptions.Singleline);
             if (match.Groups["startend"].Success) {
@@ -235,7 +275,7 @@ namespace ShowMeTheXaml {{
                 };
             }
 
-            
+
             var openingTagStart = startPosition - 1;
             var openingTagEnd = openingTagStart + match.Groups["start"].Value.Length;
             var contentEnd = openingTagEnd + match.Groups["content"].Value.Length;
