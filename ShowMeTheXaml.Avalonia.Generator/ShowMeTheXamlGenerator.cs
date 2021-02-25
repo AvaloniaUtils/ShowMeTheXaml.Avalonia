@@ -149,8 +149,9 @@ namespace ShowMeTheXaml.Avalonia {
             var values = string.Join("\n", codeDictionary.Select(pair => $"            {{\"{pair.Key}\", {ToLiteral(pair.Value)}}},"));
             return
                 $@"using System.Collections.Generic;
+using System.Collections.Generic;
 using Avalonia.Controls;
-using ShowMeTheXaml.Avalonia;
+using ShowMeTheXaml;
 
 namespace ShowMeTheXaml {{
     public static class XamlDisplayInternalData {{
