@@ -88,7 +88,7 @@ namespace ShowMeTheXaml.Avalonia {
                                 xamlDisplayPosition.XamlDisplaySpan)));
                     }
                     else {
-                        codeDictionary.Add(info.UniqueId, sources.GetSubText(sources.Lines.GetTextSpan(xamlDisplayPosition.ContentSpan)).ToString());
+                        codeDictionary.Add(info.UniqueId, GetContent(sources, xamlDisplayPosition));
                     }
 
                     var displayStartIndex = processableSourceText.Lines.GetPosition(xamlDisplayPosition.XamlDisplaySpan.Start);
@@ -110,6 +110,16 @@ namespace ShowMeTheXaml.Avalonia {
                 );
                 return processableSourceText;
             }
+        }
+
+        private static string GetContent(SourceText sources, XamlDisplayPosition xamlDisplayPosition) {
+            var content = sources.GetSubText(sources.Lines.GetTextSpan(xamlDisplayPosition.ContentSpan)).ToString();
+            
+            // Remove empty lines
+            content = Regex.Replace(content, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            content = content.TrimEnd('\r', '\n', ' ');
+            
+            return content;
         }
 
         private void CallDebugger() {
