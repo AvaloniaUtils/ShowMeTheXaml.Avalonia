@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.Text;
 using XamlX.Ast;
 
-namespace ShowMeTheXaml.Avalonia.Infrastructure {
+namespace ShowMeTheXaml.Avalonia.Infrastructure.Data {
     public struct XamlDisplayInfo {
         [CanBeNull]
         public string UniqueId { get; set; }

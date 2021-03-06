@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
+using ShowMeTheXaml.Avalonia.Infrastructure.Data;
 using XamlX.Ast;
 
 namespace ShowMeTheXaml.Avalonia.Infrastructure {
     internal sealed class InfoReceiver : IXamlAstVisitor {
         private readonly List<XamlDisplayInfo> _items = new List<XamlDisplayInfo>();
 
-        public List<XamlDisplayInfo> Controls => _items;
+        public List<XamlDisplayInfo> DisplayInfos => _items;
 
         public IXamlAstNode Visit(IXamlAstNode node) {
             if (node is XamlAstObjectNode objectNode) {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Text;
 
-namespace ShowMeTheXaml.Avalonia.Infrastructure {
+namespace ShowMeTheXaml.Avalonia.Infrastructure.Data {
     public struct XamlDisplayPosition {
         public LinePositionSpan OpeningTag { get; set; }
         public LinePositionSpan ClosingTag { get; set; }

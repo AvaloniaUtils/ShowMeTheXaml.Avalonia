@@ -1,9 +1,6 @@
 ﻿using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,8 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using ShowMeTheXaml.Avalonia.Infrastructure;
-using XamlX;
-using XamlX.Parsers;
+using ShowMeTheXaml.Avalonia.Infrastructure.Data;
 
 namespace ShowMeTheXaml.Avalonia {
     [Generator]
@@ -40,9 +36,10 @@ namespace ShowMeTheXaml.Avalonia {
 
             foreach (var markupFile in files) {
                 var infoResolver = new InfoResolver(_compilation);
-                var xamlDisplayInfos = infoResolver.ResolveInfos(markupFile.GetText()!.ToString())
-                                      .OrderByDescending(info => info.LinePosition.Line).ThenByDescending(info => info.LinePosition.Line)
-                                      .ToList();
+                var xamlDisplayContainer = infoResolver.ResolveInfos(markupFile.GetText()!.ToString());
+                var xamlDisplayInfos = xamlDisplayContainer.XamlDisplayInfos
+                                                           .OrderByDescending(info => info.LinePosition.Line).ThenByDescending(info => info.LinePosition.Line)
+                                                           .ToList();
                 var sources = markupFile.GetText() ?? throw new ArgumentNullException("markupFile.GetText()");
                 var processableSourceText = sources;
 
@@ -58,7 +55,7 @@ namespace ShowMeTheXaml.Avalonia {
                 }
 
                 foreach (var info in xamlDisplayInfos) {
-                    var xamlDisplayPosition = ParsePositions(processableSourceText, info.LinePosition);
+                    var xamlDisplayPosition = ParsePositions(processableSourceText, xamlDisplayContainer.NamespaceAlias, info.LinePosition);
 
                     if (info.UniqueId == null) {
                         context.ReportDiagnostic(Diagnostic.Create(
@@ -238,16 +235,14 @@ namespace ShowMeTheXaml {{
             return literal.ToString();
         }
 
-        private XamlDisplayPosition ParsePositions(SourceText sourceText, LinePosition startLinePosition) {
+        private XamlDisplayPosition ParsePositions(SourceText sourceText, string namespaceAlias, LinePosition startLinePosition) {
             var text = sourceText!.ToString();
 
             // Extracting element fullname, eg avalonia:XamlDisplay
             var startPosition = sourceText.Lines.GetPosition(startLinePosition);
-            var regexMatch = Regex.Match(text.Substring(startPosition), @"([^ \/>]*)", RegexOptions.Singleline);
-            var elementFullnameEscaped = Regex.Escape(regexMatch.Groups[0].Value);
+            var elementFullname = Regex.Escape(namespaceAlias) + ":XamlDisplay";
 
-            var pattern =
-                $@"((?<start><{elementFullnameEscaped}[^\/]*?>)(?<content>.*)(?<end><\/{elementFullnameEscaped}>))|(?<startend><{elementFullnameEscaped}.*?\/>)";
+            var pattern = $@"((?<start><{elementFullname}[^\/]*?>)(?<content>.*)(?<end><\/{elementFullname}>))|(?<startend><{elementFullname}.*?\/>)";
             var regexText = text.Substring(startPosition - 1);
             var match = Regex.Match(regexText, pattern, RegexOptions.Singleline);
             if (match.Groups["startend"].Success) {
