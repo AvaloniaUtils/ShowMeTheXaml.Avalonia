@@ -136,7 +136,7 @@ namespace ShowMeTheXaml.Avalonia {
             return content;
         }
 
-        private void CallDebugger() {
+        internal static void CallDebugger() {
             if (Debugger.IsAttached) {
                 Debugger.Break();
             }
