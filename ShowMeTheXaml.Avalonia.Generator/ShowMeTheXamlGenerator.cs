@@ -39,7 +39,8 @@ namespace ShowMeTheXaml.Avalonia {
             }
 
             foreach (var markupFile in files) {
-                var xamlDisplayInfos = ExtractFromXaml(markupFile)
+                var infoResolver = new InfoResolver(_compilation);
+                var xamlDisplayInfos = infoResolver.ResolveInfos(markupFile.GetText()!.ToString())
                                       .OrderByDescending(info => info.LinePosition.Line).ThenByDescending(info => info.LinePosition.Line)
                                       .ToList();
                 var sources = markupFile.GetText() ?? throw new ArgumentNullException("markupFile.GetText()");
@@ -235,21 +236,6 @@ namespace ShowMeTheXaml {{
 
             literal.Append("\"");
             return literal.ToString();
-        }
-
-        private List<XamlDisplayInfo> ExtractFromXaml(AdditionalText xamlFile) {
-            var parsed = XDocumentXamlParser.Parse(xamlFile.GetText()!.ToString(), new Dictionary<string, string> {
-                {XamlNamespaces.Blend2008, XamlNamespaces.Blend2008}
-            });
-
-            MiniCompiler
-               .CreateDefault(new RoslynTypeSystem(_compilation), AvaloniaXmlnsAttribute)
-               .Transform(parsed);
-
-            var visitor = new InfoReceiver();
-            parsed.Root.Visit(visitor);
-            parsed.Root.VisitChildren(visitor);
-            return visitor.Controls;
         }
 
         private XamlDisplayPosition ParsePositions(SourceText sourceText, LinePosition startLinePosition) {
