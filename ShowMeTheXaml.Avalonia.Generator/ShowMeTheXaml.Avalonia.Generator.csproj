@@ -6,7 +6,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <RootNamespace>ShowMeTheXaml.Avalonia</RootNamespace>
-        <PackageVersion>0.2.1</PackageVersion>
+        <PackageVersion>0.2.2</PackageVersion>
         <Title>ShowMeTheXaml.Avalonia.Generator</Title>
         <Authors>SKProCH</Authors>
         <Description>Xaml code collector for ShowMeTheXaml.Avalonia using Net5 Source Generators</Description>
