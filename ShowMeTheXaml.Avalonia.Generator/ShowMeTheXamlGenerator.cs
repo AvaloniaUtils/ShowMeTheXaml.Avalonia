@@ -100,7 +100,7 @@ namespace ShowMeTheXaml.Avalonia {
             SourceText HideSourceText(int commentStart, int commentEnd, ref SourceText processableSourceText) {
                 string sourceText = processableSourceText.ToString();
                 var commentText = sourceText.Substring(commentStart, commentEnd - commentStart);
-                var newLinesCount = commentText.Length - commentText.Replace(Environment.NewLine, string.Empty).Length;
+                var newLinesCount = (commentText.Length - commentText.Replace(Environment.NewLine, string.Empty).Length) / Environment.NewLine.Length;
                 processableSourceText = processableSourceText.WithChanges(new TextChange(
                         TextSpan.FromBounds(commentStart, commentEnd),
                         new string('\n', newLinesCount) + new string('%', commentText.Length - newLinesCount)
