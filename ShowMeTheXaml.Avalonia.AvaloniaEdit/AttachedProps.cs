@@ -25,13 +25,6 @@ namespace ShowMeTheXaml.Avalonia.AvaloniaEdit {
                     });
                 }
             });
-
-            Task.Run(async () => {
-                while (true) {
-                    await Task.Delay(1000);
-                    Dispatcher.UIThread.Post(() => {Debug.WriteLine("123");});
-                }
-            });
         }
 
         public static readonly AttachedProperty<string?> ExternalTextProperty =

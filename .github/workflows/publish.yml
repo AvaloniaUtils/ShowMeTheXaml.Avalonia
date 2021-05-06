@@ -23,11 +23,15 @@ jobs:
           dotnet pack ShowMeTheXaml.Avalonia
           dotnet build ShowMeTheXaml.Avalonia.Generator
           dotnet pack ShowMeTheXaml.Avalonia.Generator
+          dotnet build ShowMeTheXaml.Avalonia.AvaloniaEdit
+          dotnet pack ShowMeTheXaml.Avalonia.AvaloniaEdit
       - name: Publish to Nuget
         run: |
           dotnet nuget push "ShowMeTheXaml.Avalonia/bin/Debug/*.nupkg" --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
           dotnet nuget push "ShowMeTheXaml.Avalonia.Generator/bin/Debug/*.nupkg" --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push "ShowMeTheXaml.Avalonia.AvaloniaEdit/bin/Debug/*.nupkg" --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
       - name: Publish to GitHub Packages
         run: |
           dotnet nuget push "ShowMeTheXaml.Avalonia/bin/Debug/*.nupkg" --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/AvaloniaUtils/index.json --skip-duplicate
           dotnet nuget push "ShowMeTheXaml.Avalonia.Generator/bin/Debug/*.nupkg" --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/AvaloniaUtils/index.json --skip-duplicate
+          dotnet nuget push "ShowMeTheXaml.Avalonia.AvaloniaEdit/bin/Debug/*.nupkg" --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/AvaloniaUtils/index.json --skip-duplicate

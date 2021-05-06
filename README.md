@@ -1,10 +1,18 @@
 # ShowMeTheXaml.Avalonia
-A Avalonia component making it easy to show the corresponding XAML for custom styles and controls. 
-It was built out of a need to shows the XAML for the theme library Material.Avalonia.
+
+A Avalonia component making it easy to show the corresponding XAML for custom styles and controls. It was built out of a
+need to shows the XAML for the theme library Material.Avalonia.
 
 ## Getting started
-1. Install `ShowMeTheXaml.Avalonia.Generator` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia.Generator/). This will also install the `ShowMeTheXaml.Avalonia` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia/) as well.
+
+1.
+
+Install `ShowMeTheXaml.Avalonia.Generator` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia.Generator/)
+. This will also install
+the `ShowMeTheXaml.Avalonia` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia/) as well.
+
 2. Add XamlDisplay style to your app in `App.xaml`. See the example of `App.xaml`:
+
 ```xaml
 <Application ...>
     ...
@@ -17,10 +25,11 @@ It was built out of a need to shows the XAML for the theme library Material.Aval
     ...
 </Application>
 ```
-3. Initialize `DisplayContent` dictionary in `XamlDisplay` class 
 
-Add `UseXamlDisplay()` in `Program.cs` to `BuildAvaloniaApp` method.
-It should look like this:
+3. Initialize `DisplayContent` dictionary in `XamlDisplay` class
+
+Add `UseXamlDisplay()` in `Program.cs` to `BuildAvaloniaApp` method. It should look like this:
+
 ```c#
 public static AppBuilder BuildAvaloniaApp()
     => AppBuilder.Configure<App>()
@@ -32,26 +41,55 @@ public static AppBuilder BuildAvaloniaApp()
                  .UseReactiveUI();
 ```
 
-Or call `XamlDisplayInternalData.RegisterXamlDisplayData()` on your program startup.  
+Or call `XamlDisplayInternalData.RegisterXamlDisplayData()` on your program startup.
 
 5. Add `XamlDisplay` in your xaml. Set unique `UniqueId` property value. Example:
+
 ```xaml
 <showMeTheXaml:XamlDisplay UniqueId="123">
     <!-- Your code here -->
 </showMeTheXaml:XamlDisplay>
 ```
 
-## Compiling sources
+---
+
+# ShowMeTheXaml.Avalonia.AvaloniaEdit
+
+Style for displaying xaml content inside AvaloniaEdit (AvalonEdit)
+
+## Getting started
+Refer to usual [getting started](https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia#getting-started) **but:**
+1. Instead `ShowMeTheXaml.Avalonia` use `ShowMeTheXaml.Avalonia.AvaloniaEdit` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia.AvaloniaEdit/)
+2. Use another style. Instead
+```xaml
+<StyleInclude Source="avares://ShowMeTheXaml.Avalonia/XamlDisplay.xaml"/>
+```
+use
+```xaml
+<StyleInclude Source="avares://ShowMeTheXaml.Avalonia.AvaloniaEdit/XamlDisplayStyles.axaml"/>
+```
+
+Everything else remains the same.
+
+---
+
+# Compiling sources
+
 1. Clone this repo:
+
 ```
 git clone https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git
 ```
+
 2. Navigate to repo folder
 3. Fetch all submodules:
+
 ```
 git submodule update --init --recursive
 ```
+
 4. Compile project:
+
 ```
 dotnet build
 ```

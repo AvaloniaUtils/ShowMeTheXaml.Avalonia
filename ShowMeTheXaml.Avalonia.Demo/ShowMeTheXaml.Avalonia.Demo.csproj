@@ -5,29 +5,31 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\"/>
+        <Folder Include="Models\" />
         <Compile Update="**\*.xaml.cs">
             <DependentUpon>%(Filename)</DependentUpon>
         </Compile>
         <AvaloniaResource Include="**\*.xaml">
             <SubType>Designer</SubType>
         </AvaloniaResource>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.0"/>
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.0"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0"/>
+        <PackageReference Include="Avalonia" Version="0.10.0" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.0" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.Generator\ShowMeTheXaml.Avalonia.Generator.csproj" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.AvaloniaEdit\ShowMeTheXaml.Avalonia.AvaloniaEdit.csproj" />
+        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.Generator\ShowMeTheXaml.Avalonia.Generator.csproj" OutputItemType="Analyzer" />
     </ItemGroup>
     
     
     <!--     This is can be done automatically if you use NuGet package -->
     <!--    In our case we reference generator project manually and should add xaml and axaml manually-->
     <ItemGroup>
-        <AdditionalFiles Include="**\*.xaml"/>
-        <AdditionalFiles Include="**\*.axaml"/>
+        <AdditionalFiles Include="**\*.xaml" />
+        <AdditionalFiles Include="**\*.axaml" />
     </ItemGroup>
 </Project>

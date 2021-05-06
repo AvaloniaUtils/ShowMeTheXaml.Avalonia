@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMeTheXaml.Avalonia", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMeTheXaml.Avalonia.Demo", "ShowMeTheXaml.Avalonia.Demo\ShowMeTheXaml.Avalonia.Demo.csproj", "{8ED944AB-4F06-4576-8E1E-82F4B4D54F30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMeTheXaml.Avalonia.AvaloniaEdit", "ShowMeTheXaml.Avalonia.AvaloniaEdit\ShowMeTheXaml.Avalonia.AvaloniaEdit.csproj", "{F85FF56D-60F3-48F3-BD77-72ABD63065C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8ED944AB-4F06-4576-8E1E-82F4B4D54F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ED944AB-4F06-4576-8E1E-82F4B4D54F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ED944AB-4F06-4576-8E1E-82F4B4D54F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F85FF56D-60F3-48F3-BD77-72ABD63065C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F85FF56D-60F3-48F3-BD77-72ABD63065C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F85FF56D-60F3-48F3-BD77-72ABD63065C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F85FF56D-60F3-48F3-BD77-72ABD63065C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
