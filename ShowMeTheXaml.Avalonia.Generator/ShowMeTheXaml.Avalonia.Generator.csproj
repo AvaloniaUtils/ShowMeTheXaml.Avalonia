@@ -6,7 +6,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <RootNamespace>ShowMeTheXaml.Avalonia</RootNamespace>
-        <PackageVersion>0.2.3</PackageVersion>
+        <PackageVersion>0.3.0</PackageVersion>
         <Title>ShowMeTheXaml.Avalonia.Generator</Title>
         <Authors>SKProCH</Authors>
         <Description>Xaml code collector for ShowMeTheXaml.Avalonia using Net5 Source Generators</Description>
@@ -15,6 +15,7 @@
         <RepositoryUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <PackageTags>avalonia avaloniaui csharp-sourcegenerator</PackageTags>
+        <PackageReleaseNotes>Xaml files are now added to AdditionalFiles automatically</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,5 +34,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ShowMeTheXaml.Avalonia\ShowMeTheXaml.Avalonia.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="*.props">
+            <Pack>true</Pack>
+            <PackagePath>build\;buildTransitive\</PackagePath>
+        </Content>
     </ItemGroup>
 </Project>

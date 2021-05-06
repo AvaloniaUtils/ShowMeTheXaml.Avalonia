@@ -4,14 +4,7 @@ It was built out of a need to shows the XAML for the theme library Material.Aval
 
 ## Getting started
 1. Install `ShowMeTheXaml.Avalonia.Generator` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia.Generator/). This will also install the `ShowMeTheXaml.Avalonia` [nuget package](https://www.nuget.org/packages/ShowMeTheXaml.Avalonia/) as well.
-2. Add the following code to csproj file
-```c#
-<ItemGroup>
-    <AdditionalFiles Include="**\*.xaml"/>
-    <AdditionalFiles Include="**\*.axaml"/>
-</ItemGroup>
-```
-3. Add XamlDisplay style to your app in `App.xaml`. See the example of `App.xaml`:
+2. Add XamlDisplay style to your app in `App.xaml`. See the example of `App.xaml`:
 ```xaml
 <Application ...>
     ...
@@ -24,7 +17,7 @@ It was built out of a need to shows the XAML for the theme library Material.Aval
     ...
 </Application>
 ```
-4. Initialize `DisplayContent` dictionary in `XamlDisplay` class 
+3. Initialize `DisplayContent` dictionary in `XamlDisplay` class 
 
 Add `UseXamlDisplay()` in `Program.cs` to `BuildAvaloniaApp` method.
 It should look like this:
