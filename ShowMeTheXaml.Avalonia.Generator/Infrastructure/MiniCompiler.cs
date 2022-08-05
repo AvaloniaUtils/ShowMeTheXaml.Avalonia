@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using XamlX.Compiler;
 using XamlX.Emit;
 using XamlX.Transform;
@@ -17,7 +19,7 @@ namespace ShowMeTheXaml.Avalonia.Infrastructure
 
             var configuration = new TransformerConfiguration(
                 typeSystem,
-                typeSystem.Assemblies[0],
+                typeSystem.Assemblies.First(),
                 mappings);
             return new MiniCompiler(configuration);
         }
@@ -31,11 +33,7 @@ namespace ShowMeTheXaml.Avalonia.Infrastructure
             Transformers.Add(new TypeReferenceResolver());
         }
 
-        protected override XamlEmitContext<object, IXamlEmitResult> InitCodeGen(
-            IFileSource file,
-            Func<string, IXamlType, IXamlTypeBuilder<object>> createSubType,
-            object codeGen, XamlRuntimeContext<object, IXamlEmitResult> context,
-            bool needContextLocal) =>
-            throw new NotSupportedException();
+        protected override XamlEmitContext<object, IXamlEmitResult> InitCodeGen(IFileSource file, Func<string, IXamlType, IXamlTypeBuilder<object>> createSubType, Func<string, IXamlType, IEnumerable<IXamlType>, IXamlTypeBuilder<object>> createDelegateType, object codeGen, XamlRuntimeContext<object, IXamlEmitResult> context, bool needContextLocal)
+            => throw new NotSupportedException();
     }
 }

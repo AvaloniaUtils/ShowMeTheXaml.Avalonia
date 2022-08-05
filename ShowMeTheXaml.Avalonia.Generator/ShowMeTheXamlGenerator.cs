@@ -3,22 +3,36 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using ShowMeTheXaml.Avalonia.Infrastructure;
-using ShowMeTheXaml.Avalonia.Infrastructure.Data;
 
 namespace ShowMeTheXaml.Avalonia {
     [Generator]
     public class ShowMeTheXamlGenerator : ISourceGenerator {
         private CSharpCompilation _compilation;
-        private const string AvaloniaXmlnsAttribute = "Avalonia.Metadata.XmlnsDefinitionAttribute";
         public void Initialize(GeneratorInitializationContext context) { }
 
         public void Execute(GeneratorExecutionContext context) {
-            _compilation = (CSharpCompilation) context.Compilation;
+            try {
+                ExecuteInternal(context);
+            }
+            catch (Exception e) {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    new DiagnosticDescriptor(
+                        "XD0000",
+                        $"ShowMeTheXaml.Generator exited with exception",
+                        $"ShowMeTheXaml.Generator throw exception. Report it on GitHub and attach project. Exception type: {e}",
+                        "General",
+                        DiagnosticSeverity.Error,
+                        true
+                    ),
+                    Location.None));
+            }
+        }
+        private void ExecuteInternal(GeneratorExecutionContext context) {
+            _compilation = (CSharpCompilation)context.Compilation;
             Dictionary<string, string> codeDictionary = new Dictionary<string, string>();
             var files = context.AdditionalFiles.Where(text => text.Path.EndsWith(".xaml") || text.Path.EndsWith(".axaml")).ToList();
             if (files.Count == 0) {
@@ -36,27 +50,14 @@ namespace ShowMeTheXaml.Avalonia {
 
             foreach (var markupFile in files) {
                 var infoResolver = new InfoResolver(_compilation);
-                var xamlDisplayContainer = infoResolver.ResolveInfos(markupFile.GetText()!.ToString());
-                var xamlDisplayInfos = xamlDisplayContainer.XamlDisplayInfos
-                                                           .OrderByDescending(info => info.LinePosition.Line).ThenByDescending(info => info.LinePosition.Line)
-                                                           .ToList();
                 var sources = markupFile.GetText() ?? throw new ArgumentNullException("markupFile.GetText()");
-                var processableSourceText = sources;
-
-                //Remove all comments
-                var sourceText = processableSourceText!.ToString();
-                int commentStart;
-                while ((commentStart = sourceText.IndexOf("<!--", StringComparison.Ordinal)) != -1) {
-                    var commentEnd = sourceText.IndexOf("-->", StringComparison.Ordinal);
-                    if (commentEnd == -1) commentEnd = sourceText.Length;
-                    else commentEnd += 3;
-                    processableSourceText = HideSourceText(commentStart, commentEnd, ref processableSourceText);
-                    sourceText = processableSourceText!.ToString();
-                }
+                var xamlDisplayContainer = infoResolver.ResolveInfos(sources);
+                var xamlDisplayInfos = xamlDisplayContainer.XamlDisplayInfos
+                    .OrderByDescending(info => info.LinePosition.Line)
+                    .ThenByDescending(info => info.LinePosition.Line)
+                    .ToList();
 
                 foreach (var info in xamlDisplayInfos) {
-                    var xamlDisplayPosition = ParsePositions(processableSourceText, xamlDisplayContainer.NamespaceAlias, info.LinePosition);
-
                     if (info.UniqueId == null) {
                         context.ReportDiagnostic(Diagnostic.Create(
                             new DiagnosticDescriptor(
@@ -67,9 +68,8 @@ namespace ShowMeTheXaml.Avalonia {
                                 DiagnosticSeverity.Error,
                                 true
                             ),
-                            Location.Create(markupFile.Path,
-                                sources.Lines.GetTextSpan(xamlDisplayPosition.XamlDisplaySpan),
-                                xamlDisplayPosition.XamlDisplaySpan)));
+                            Location.Create(markupFile.Path, info.GetDisplayStartingTagTextSpan(xamlDisplayContainer, out var linePositionSpan), linePositionSpan)
+                        ));
                     }
                     else if (codeDictionary.ContainsKey(info.UniqueId)) {
                         context.ReportDiagnostic(Diagnostic.Create(
@@ -81,57 +81,16 @@ namespace ShowMeTheXaml.Avalonia {
                                 DiagnosticSeverity.Error,
                                 true
                             ),
-                            Location.Create(markupFile.Path,
-                                sources.Lines.GetTextSpan(xamlDisplayPosition.XamlDisplaySpan),
-                                xamlDisplayPosition.XamlDisplaySpan)));
+                            Location.Create(markupFile.Path, info.GetDisplayStartingTagTextSpan(xamlDisplayContainer, out var linePositionSpan), linePositionSpan)
+                        ));
                     }
                     else {
-                        codeDictionary.Add(info.UniqueId, GetContent(sources, xamlDisplayPosition));
+                        codeDictionary.Add(info.UniqueId, info.AstText);
                     }
-
-                    var displayStartIndex = processableSourceText.Lines.GetPosition(xamlDisplayPosition.XamlDisplaySpan.Start);
-                    var displayEndIndex = processableSourceText.Lines.GetPosition(xamlDisplayPosition.XamlDisplaySpan.End);
-                    HideSourceText(displayStartIndex, displayEndIndex, ref processableSourceText);
                 }
             }
 
             context.AddSource("XamlDisplayInternalData.g.cs", SourceText.From(GenerateSources(codeDictionary), Encoding.UTF8));
-
-            SourceText HideSourceText(int commentStart, int commentEnd, ref SourceText processableSourceText) {
-                string sourceText = processableSourceText.ToString();
-                var commentText = sourceText.Substring(commentStart, commentEnd - commentStart);
-                var newLinesCount = (commentText.Length - commentText.Replace(Environment.NewLine, string.Empty).Length) / Environment.NewLine.Length;
-                processableSourceText = processableSourceText.WithChanges(new TextChange(
-                        TextSpan.FromBounds(commentStart, commentEnd),
-                        new string('\n', newLinesCount) + new string('%', commentText.Length - newLinesCount)
-                    )
-                );
-                return processableSourceText;
-            }
-        }
-
-        private static string GetContent(SourceText sources, XamlDisplayPosition xamlDisplayPosition) {
-            var content = sources.GetSubText(sources.Lines.GetTextSpan(xamlDisplayPosition.ContentSpan)).ToString();
-
-            // Remove empty lines
-            content = Regex.Replace(content, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            content = content.TrimEnd('\r', '\n', ' ');
-
-            // Remove unnecessary indentation
-            var lines = content.Split('\n', '\r').Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-            var minimum = int.MaxValue;
-            foreach (var line in lines) {
-                if (line.Length == 0) continue;
-                minimum = Math.Min(minimum, line.Length - line.TrimStart().Length);
-                if (minimum == 0) break;
-            }
-
-            if (minimum != 0 && minimum != int.MaxValue) {
-                content = string.Join(Environment.NewLine, lines.Select(s => s.Substring(minimum)));
-            }
-
-
-            return content;
         }
 
         internal static void CallDebugger() {
@@ -233,49 +192,6 @@ namespace ShowMeTheXaml {{
 
             literal.Append("\"");
             return literal.ToString();
-        }
-
-        private XamlDisplayPosition ParsePositions(SourceText sourceText, string namespaceAlias, LinePosition startLinePosition) {
-            var text = sourceText!.ToString();
-
-            // Extracting element fullname, eg avalonia:XamlDisplay
-            var startPosition = sourceText.Lines.GetPosition(startLinePosition);
-            var elementFullname = Regex.Escape(namespaceAlias) + ":XamlDisplay";
-
-            var pattern = $@"((?<start><{elementFullname}[^\/]*?>)(?<content>.*)(?<end><\/{elementFullname}>))|(?<startend><{elementFullname}.*?\/>)";
-            var regexText = text.Substring(startPosition - 1);
-            var match = Regex.Match(regexText, pattern, RegexOptions.Singleline);
-            if (match.Groups["startend"].Success) {
-                var endLinePosition = sourceText.Lines.GetLinePosition(startPosition + match.Groups["startend"].Value.Length - 1);
-                return new XamlDisplayPosition {
-                    OpeningTag = new LinePositionSpan(
-                        sourceText.Lines.GetLinePosition(startPosition - 1),
-                        endLinePosition
-                    ),
-                    ClosingTag = new LinePositionSpan(endLinePosition, endLinePosition),
-                    ContentSpan = new LinePositionSpan(endLinePosition, endLinePosition)
-                };
-            }
-
-
-            var openingTagStart = startPosition - 1;
-            var openingTagEnd = openingTagStart + match.Groups["start"].Value.Length;
-            var contentEnd = openingTagEnd + match.Groups["content"].Value.Length;
-            var endingTagEnd = contentEnd + match.Groups["end"].Value.Length;
-            return new XamlDisplayPosition {
-                OpeningTag = new LinePositionSpan(
-                    sourceText.Lines.GetLinePosition(openingTagStart),
-                    sourceText.Lines.GetLinePosition(openingTagEnd)
-                ),
-                ContentSpan = new LinePositionSpan(
-                    sourceText.Lines.GetLinePosition(openingTagEnd),
-                    sourceText.Lines.GetLinePosition(contentEnd)
-                ),
-                ClosingTag = new LinePositionSpan(
-                    sourceText.Lines.GetLinePosition(contentEnd),
-                    sourceText.Lines.GetLinePosition(endingTagEnd)
-                )
-            };
         }
     }
 }
