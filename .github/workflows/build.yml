@@ -1,9 +1,15 @@
-name: .NET Build
+name: CI Build
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  BUILD_VERSION: 1.1.0
+  PACKAGE_RELEASE_NOTES: |
+    All ShowMeTheXaml.Avalonia packages now have consistent versions
+    ShowMeTheXaml.Avalonia.AvaloniaEdit: Rework and improvements
 
 on:
   push:
-    branches-ignore:
-      - 'master'
   pull_request:
     branches:
       - '**:**'
@@ -19,7 +25,23 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
+      - uses: actions/cache@v1
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
       - name: Restore dependencies
         run: dotnet restore
+      - name: Append ci info to version
+        if: github.ref != 'refs/heads/master' 
+        run: |
+          echo "BUILD_VERSION=$BUILD_VERSION-ci$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          echo "PACKAGE_RELEASE_NOTES=This is the package for CI build $GITHUB_RUN_ID" >> $GITHUB_ENV
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --no-restore --configuration Release /property:Version=$BUILD_VERSION /property:PackageReleaseNotes="$PACKAGE_RELEASE_NOTES"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: nupkg
+          path: '**.nupkg'

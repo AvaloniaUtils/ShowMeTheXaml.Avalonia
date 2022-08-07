@@ -14,8 +14,6 @@
         <RepositoryUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <PackageTags>avalonia avaloniaui csharp-sourcegenerator</PackageTags>
-        <Version>0.3.1</Version>
-        <PackageReleaseNotes>Implement proper XamlDisplay content capturing</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
