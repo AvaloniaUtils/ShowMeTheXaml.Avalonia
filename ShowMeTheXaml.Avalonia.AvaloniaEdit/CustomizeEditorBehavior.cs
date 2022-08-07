@@ -22,7 +22,7 @@ public class CustomizeEditorBehavior : Behavior<TextEditor> {
             .Subscribe(OnBoundsChanged);
     }
     private void OnBoundsChanged(Rect obj) {
-        AssociatedObject.MinWidth = Math.Clamp(obj.Width, AssociatedObject.MinWidth, AssociatedObject.MaxWidth);
+        AssociatedObject.MinWidth = Math.Min(Math.Max(obj.Width, AssociatedObject.MinWidth), AssociatedObject.MaxWidth);
     }
 
     protected override void OnDetachedFromVisualTree() {
