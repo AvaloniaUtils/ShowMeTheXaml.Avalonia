@@ -11,16 +11,20 @@ using Avalonia.Metadata;
 // ReSharper disable once CheckNamespace
 namespace ShowMeTheXaml {
     public class XamlDisplay : TemplatedControl {
-        public static Dictionary<string, XamlDisplayInstanceData> DisplayContent
-        {
-            get => _displayContent ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
-                                                                       "Also check \"Getting started\" on our Github");
-            set => _displayContent = value;
-        }
+        public static readonly DirectProperty<XamlDisplay, string?> XamlTextProperty =
+            AvaloniaProperty.RegisterDirect<XamlDisplay, string?>(nameof(XamlText), display => display.XamlText);
 
-        private string? _xamlText;
+        public static readonly StyledProperty<object> ContentProperty =
+            ContentControl.ContentProperty.AddOwner<Panel>();
+
+        public static readonly StyledProperty<AlignmentY> XamlButtonAlignmentProperty =
+            AvaloniaProperty.Register<XamlDisplay, AlignmentY>(nameof(XamlButtonAlignment), AlignmentY.Bottom);
+
+        private IDisposable? _buttonClickHandler;
+        private Popup? _popup;
         private string _uniqueId = null!;
         private AlignmentY _xamlButtonAlignment;
+        private string? _xamlText;
 
         public string UniqueId {
             get => _uniqueId;
@@ -30,30 +34,16 @@ namespace ShowMeTheXaml {
             }
         }
 
-        public static readonly DirectProperty<XamlDisplay, string?> XamlTextProperty =
-            AvaloniaProperty.RegisterDirect<XamlDisplay, string?>(nameof(XamlText), display => display.XamlText);
-
         public string? XamlText {
             get => _xamlText;
             private set => SetAndRaise(XamlTextProperty, ref _xamlText, value);
         }
-
-        public static readonly StyledProperty<object> ContentProperty =
-            ContentControl.ContentProperty.AddOwner<Panel>();
 
         [Content]
         public object Content {
             get => GetValue(ContentProperty);
             set => SetValue(ContentProperty, value);
         }
-
-        public static readonly StyledProperty<AlignmentY> XamlButtonAlignmentProperty =
-            AvaloniaProperty.Register<XamlDisplay, AlignmentY>(nameof(XamlButtonAlignment), AlignmentY.Bottom);
-
-        private static Dictionary<string, XamlDisplayInstanceData>? _displayContent;
-
-        private IDisposable? _buttonClickHandler;
-        private Popup? _popup;
 
         public AlignmentY XamlButtonAlignment {
             get => GetValue(XamlButtonAlignmentProperty);
@@ -77,5 +67,17 @@ namespace ShowMeTheXaml {
             DisplayContent.TryGetValue(UniqueId, out var xamlDisplayInstanceData);
             XamlText = xamlDisplayInstanceData.Data;
         }
+
+        #region ShowMeTheXaml static data
+
+        private static Dictionary<string, XamlDisplayInstanceData>? _displayContent;
+
+        public static Dictionary<string, XamlDisplayInstanceData> DisplayContent {
+            get => _displayContent ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
+                                                                       "Also check \"Getting started\" on our Github");
+            set => _displayContent = value;
+        }
+
+        #endregion
     }
 }
