@@ -210,6 +210,6 @@ internal class XdXDocumentXamlParser {
         Exception ParseError(IXmlLineInfo line, string message) =>
             new XamlParseException(message, line.LineNumber, line.LinePosition);
 
-        public XamlAstObjectNode Parse() => (XamlAstObjectNode)ParseNewInstance(_root, true, XmlSpace.Default);
+        public XamlAstObjectNode Parse() => ParseNewInstance(_root, true, XmlSpace.Default);
     }
 }

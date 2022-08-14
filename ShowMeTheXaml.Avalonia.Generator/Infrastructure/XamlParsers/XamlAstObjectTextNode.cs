@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using XamlX.Ast;

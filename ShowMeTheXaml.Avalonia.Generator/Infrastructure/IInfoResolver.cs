@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.CodeAnalysis.Text;
+﻿using Microsoft.CodeAnalysis.Text;
 using ShowMeTheXaml.Avalonia.Infrastructure.Data;
 
 namespace ShowMeTheXaml.Avalonia.Infrastructure

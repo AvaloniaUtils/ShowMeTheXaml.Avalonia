@@ -3,7 +3,6 @@
         xmlns:vm="clr-namespace:ShowMeTheXaml.Avalonia.Demo.ViewModels;assembly=ShowMeTheXaml.Avalonia.Demo"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avalonia="clr-namespace:ShowMeTheXaml.Avalonia;assembly=ShowMeTheXaml.Avalonia"
         xmlns:showMeTheXaml="clr-namespace:ShowMeTheXaml;assembly=ShowMeTheXaml.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ShowMeTheXaml.Avalonia.Demo.Views.MainWindow"

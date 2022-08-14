@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using ShowMeTheXaml.Avalonia.Infrastructure.Data;
 using ShowMeTheXaml.Avalonia.Infrastructure.XamlParsers;
 using XamlX;
-using XamlX.Parsers;
 
 namespace ShowMeTheXaml.Avalonia.Infrastructure {
     internal class InfoResolver : IInfoResolver {

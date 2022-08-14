@@ -3,58 +3,40 @@ using Avalonia;
 using Avalonia.Xaml.Interactivity;
 using AvaloniaEdit;
 
-namespace ShowMeTheXaml.Avalonia.AvaloniaEdit; 
+namespace ShowMeTheXaml.Avalonia.AvaloniaEdit;
 
-public class DocumentTextBindingBehavior : Behavior<TextEditor>
-{
-    private TextEditor _textEditor = null;
-
+public class DocumentTextBindingBehavior : Behavior<TextEditor> {
     public static readonly StyledProperty<string> TextProperty =
         AvaloniaProperty.Register<DocumentTextBindingBehavior, string>(nameof(Text));
 
-    public string Text
-    {
+    public string Text {
         get => GetValue(TextProperty);
         set => SetValue(TextProperty, value);
     }
 
-    protected override void OnAttached()
-    {
+    protected override void OnAttached() {
         base.OnAttached();
 
-        if (AssociatedObject is TextEditor textEditor)
-        {
-            _textEditor = textEditor;
-            _textEditor.TextChanged += TextChanged;
-            this.GetObservable(TextProperty).Subscribe(TextPropertyChanged);
-        }
+        AssociatedObject!.TextChanged += TextChanged;
+        this.GetObservable(TextProperty).Subscribe(TextPropertyChanged);
     }
 
-    protected override void OnDetaching()
-    {
+    protected override void OnDetaching() {
+        AssociatedObject!.TextChanged -= TextChanged;
         base.OnDetaching();
+    }
 
-        if (_textEditor != null)
-        {
-            _textEditor.TextChanged -= TextChanged;
+    private void TextChanged(object sender, EventArgs eventArgs) {
+        if (AssociatedObject!.Document != null) {
+            Text = AssociatedObject.Document.Text;
         }
     }
 
-    private void TextChanged(object sender, EventArgs eventArgs)
-    {
-        if (_textEditor != null && _textEditor.Document != null)
-        {
-            Text = _textEditor.Document.Text;
-        }
-    }
-
-    private void TextPropertyChanged(string text)
-    {
-        if (_textEditor != null && _textEditor.Document != null && text != null)
-        {
-            var caretOffset = _textEditor.CaretOffset;
-            _textEditor.Document.Text = text;
-            _textEditor.CaretOffset = caretOffset;
+    private void TextPropertyChanged(string? text) {
+        if (AssociatedObject!.Document != null && text != null) {
+            var caretOffset = AssociatedObject.CaretOffset;
+            AssociatedObject.Document.Text = text;
+            AssociatedObject.CaretOffset = caretOffset;
         }
     }
 }
