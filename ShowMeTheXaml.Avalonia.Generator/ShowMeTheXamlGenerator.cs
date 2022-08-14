@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -33,7 +34,7 @@ namespace ShowMeTheXaml.Avalonia {
         }
         private void ExecuteInternal(GeneratorExecutionContext context) {
             _compilation = (CSharpCompilation)context.Compilation;
-            Dictionary<string, string> codeDictionary = new Dictionary<string, string>();
+            var codeDictionary = new Dictionary<string, (string XamlText, string FileName, Dictionary<string, string> Aliases)>();
             var files = context.AdditionalFiles.Where(text => text.Path.EndsWith(".xaml") || text.Path.EndsWith(".axaml")).ToList();
             if (files.Count == 0) {
                 context.ReportDiagnostic(Diagnostic.Create(
@@ -85,12 +86,14 @@ namespace ShowMeTheXaml.Avalonia {
                         ));
                     }
                     else {
-                        codeDictionary.Add(info.UniqueId, info.AstText);
+                        codeDictionary.Add(info.UniqueId, (info.AstText, Path.GetFileName(markupFile.Path), xamlDisplayContainer.NamespaceAliases));
                     }
                 }
             }
 
-            context.AddSource("XamlDisplayInternalData.g.cs", SourceText.From(GenerateSources(codeDictionary), Encoding.UTF8));
+            var generatedCode = ShowMeTheXamlCodeTemplatesGenerator.GenerateXamlDisplayInternalData(codeDictionary);
+            var sourceText = SourceText.From(generatedCode, Encoding.UTF8);
+            context.AddSource("XamlDisplayInternalData.g.cs", sourceText);
         }
 
         internal static void CallDebugger() {
@@ -102,96 +105,7 @@ namespace ShowMeTheXaml.Avalonia {
             }
         }
 
-        private string GenerateSources(Dictionary<string, string> codeDictionary) {
-            var values = string.Join("\n", codeDictionary.Select(pair => $"            {{\"{pair.Key}\", {ToLiteral(pair.Value)}}},"));
-            return
-                $@"using System.Collections.Generic;
-using System.Collections.Generic;
-using Avalonia.Controls;
-using ShowMeTheXaml;
 
-namespace ShowMeTheXaml {{
-    public static class XamlDisplayInternalData {{
-        public static Dictionary<string, string> Data {{ get; }} = new Dictionary<string, string>() {{
-{values}
-        }};
-
-        /// <summary>
-        /// Loads data for xaml displays
-        /// </summary>
-        public static TAppBuilder UseXamlDisplay<TAppBuilder>(this TAppBuilder builder)
-            where TAppBuilder : AppBuilderBase<TAppBuilder>, new()
-        {{
-            RegisterXamlDisplayData();
-            return builder;
-        }}
-
-        /// <summary>
-        /// Loads data for xaml displays
-        /// </summary>
-        public static void RegisterXamlDisplayData()
-        {{
-            XamlDisplay.DisplayContent = Data;
-        }}
-    }}
-}}";
-        }
-
-        static string ToLiteral(string input) {
-            StringBuilder literal = new StringBuilder(input.Length + 2);
-            literal.Append("\"");
-            foreach (var c in input) {
-                switch (c) {
-                    case '\'':
-                        literal.Append(@"\'");
-                        break;
-                    case '\"':
-                        literal.Append("\\\"");
-                        break;
-                    case '\\':
-                        literal.Append(@"\\");
-                        break;
-                    case '\0':
-                        literal.Append(@"\0");
-                        break;
-                    case '\a':
-                        literal.Append(@"\a");
-                        break;
-                    case '\b':
-                        literal.Append(@"\b");
-                        break;
-                    case '\f':
-                        literal.Append(@"\f");
-                        break;
-                    case '\n':
-                        literal.Append(@"\n");
-                        break;
-                    case '\r':
-                        literal.Append(@"\r");
-                        break;
-                    case '\t':
-                        literal.Append(@"\t");
-                        break;
-                    case '\v':
-                        literal.Append(@"\v");
-                        break;
-                    default:
-                        // ASCII printable character
-                        if (c >= 0x20 && c <= 0x7e) {
-                            literal.Append(c);
-                            // As UTF16 escaped character
-                        }
-                        else {
-                            literal.Append(@"\u");
-                            literal.Append(((int) c).ToString("x4"));
-                        }
-
-                        break;
-                }
-            }
-
-            literal.Append("\"");
-            return literal.ToString();
-        }
+        
     }
 }

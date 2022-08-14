@@ -11,13 +11,10 @@ using Avalonia.Metadata;
 // ReSharper disable once CheckNamespace
 namespace ShowMeTheXaml {
     public class XamlDisplay : TemplatedControl {
-        public static Dictionary<string, string> DisplayContent
+        public static Dictionary<string, XamlDisplayInstanceData> DisplayContent
         {
-            get
-            {
-                return _displayContent ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
-                                                                           "Also check \"Getting started\" on our Github");
-            }
+            get => _displayContent ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
+                                                                       "Also check \"Getting started\" on our Github");
             set => _displayContent = value;
         }
 
@@ -53,7 +50,7 @@ namespace ShowMeTheXaml {
         public static readonly StyledProperty<AlignmentY> XamlButtonAlignmentProperty =
             AvaloniaProperty.Register<XamlDisplay, AlignmentY>(nameof(XamlButtonAlignment), AlignmentY.Bottom);
 
-        private static Dictionary<string, string>? _displayContent;
+        private static Dictionary<string, XamlDisplayInstanceData>? _displayContent;
 
         private IDisposable? _buttonClickHandler;
         private Popup? _popup;
@@ -77,8 +74,8 @@ namespace ShowMeTheXaml {
         }
 
         private void UpdateXamlText() {
-            DisplayContent.TryGetValue(UniqueId, out var xamlText);
-            XamlText = xamlText;
+            DisplayContent.TryGetValue(UniqueId, out var xamlDisplayInstanceData);
+            XamlText = xamlDisplayInstanceData.Data;
         }
     }
 }

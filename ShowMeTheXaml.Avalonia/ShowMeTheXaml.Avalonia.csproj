@@ -13,6 +13,7 @@
         <RepositoryUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <PackageTags>avalonia avaloniaui</PackageTags>
+        <RootNamespace>ShowMeTheXaml</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
