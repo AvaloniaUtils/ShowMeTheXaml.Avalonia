@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Metadata;
 
@@ -42,7 +43,11 @@ namespace ShowMeTheXaml {
         [Content]
         public object Content {
             get => GetValue(ContentProperty);
-            set => SetValue(ContentProperty, value);
+            set {
+                if (GetValue(ContentProperty) is ILogical oldLogical) LogicalChildren.Remove(oldLogical);
+                SetValue(ContentProperty, value);
+                if (value is ILogical newLogical) LogicalChildren.Add(newLogical);
+            }
         }
 
         public AlignmentY XamlButtonAlignment {
