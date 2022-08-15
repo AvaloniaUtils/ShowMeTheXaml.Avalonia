@@ -12,8 +12,8 @@ using Avalonia.Metadata;
 // ReSharper disable once CheckNamespace
 namespace ShowMeTheXaml {
     public class XamlDisplay : TemplatedControl {
-        public static readonly DirectProperty<XamlDisplay, string?> XamlTextProperty =
-            AvaloniaProperty.RegisterDirect<XamlDisplay, string?>(nameof(XamlText), display => display.XamlText);
+        public static readonly StyledProperty<string?> XamlTextProperty =
+            AvaloniaProperty.Register<XamlDisplay, string?>(nameof(XamlText));
 
         public static readonly StyledProperty<object> ContentProperty =
             ContentControl.ContentProperty.AddOwner<Panel>();
@@ -25,7 +25,6 @@ namespace ShowMeTheXaml {
         private Popup? _popup;
         private string _uniqueId = null!;
         private AlignmentY _xamlButtonAlignment;
-        private string? _xamlText;
 
         public string UniqueId {
             get => _uniqueId;
@@ -36,8 +35,8 @@ namespace ShowMeTheXaml {
         }
 
         public string? XamlText {
-            get => _xamlText;
-            private set => SetAndRaise(XamlTextProperty, ref _xamlText, value);
+            get => GetValue(XamlTextProperty);
+            set => SetValue(XamlTextProperty, value);
         }
 
         [Content]
@@ -55,6 +54,9 @@ namespace ShowMeTheXaml {
             set => SetAndRaise(XamlButtonAlignmentProperty, ref _xamlButtonAlignment, value);
         }
 
+        public Dictionary<string, string> CurrentFileNamespaceAliases =>
+            XamlFilesNamespaceAliases[DisplayContent[UniqueId].FileName];
+
         private void SourceXamlButtonOnPointerPressed(object sender, PointerPressedEventArgs e) {
             if (_popup != null) {
                 _popup.IsOpen = !_popup.IsOpen;
@@ -68,11 +70,10 @@ namespace ShowMeTheXaml {
             _buttonClickHandler = e.NameScope.Find<Control>("SourceXamlButton").AddDisposableHandler(PointerPressedEvent, SourceXamlButtonOnPointerPressed);
         }
 
-        private void Reset() {
+        public void Reset() {
             if (!DisplayContent.TryGetValue(UniqueId, out var xamlDisplayInstanceData)) return;
             if (!string.IsNullOrEmpty(XamlText)) {
-                var namespaceAliases = XamlFilesNamespaceAliases[xamlDisplayInstanceData.FileName];
-                Content = AvaloniaRuntimeXamlLoaderHelper.Parse(xamlDisplayInstanceData.Data, namespaceAliases);
+                Content = AvaloniaRuntimeXamlLoaderHelper.Parse(xamlDisplayInstanceData.Data, CurrentFileNamespaceAliases);
             }
             XamlText = xamlDisplayInstanceData.Data;
         }

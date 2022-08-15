@@ -32,7 +32,13 @@ public static class AvaloniaRuntimeXamlLoaderHelper {
             return contentControl.Content;
         }
         catch (XmlException e) {
-            throw new XmlException(e.Message, e.InnerException, e.LineNumber - 1, e.LinePosition);
+            // cut line info
+            var lastIndexOfDot = e.Message.LastIndexOf('.', e.Message.Length - 2);
+            var meaningfulMessage = lastIndexOfDot == -1 
+                ? e.Message 
+                : e.Message.Substring(0, lastIndexOfDot + 1);
+            
+            throw new XmlException(meaningfulMessage, e.InnerException, e.LineNumber - 1, e.LinePosition);
         }
     }
 }
