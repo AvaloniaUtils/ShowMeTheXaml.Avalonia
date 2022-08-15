@@ -39,6 +39,7 @@ public static class ShowMeTheXamlCodeTemplatesGenerator {
             public static void RegisterXamlDisplayData()
             {{
                 XamlDisplay.DisplayContent = Data;
+                XamlDisplay.XamlFilesNamespaceAliases = NamespaceAliases;
             }}
         }}
     }}

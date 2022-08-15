@@ -31,7 +31,7 @@ namespace ShowMeTheXaml {
             get => _uniqueId;
             set {
                 _uniqueId = value;
-                UpdateXamlText();
+                Reset();
             }
         }
 
@@ -68,19 +68,32 @@ namespace ShowMeTheXaml {
             _buttonClickHandler = e.NameScope.Find<Control>("SourceXamlButton").AddDisposableHandler(PointerPressedEvent, SourceXamlButtonOnPointerPressed);
         }
 
-        private void UpdateXamlText() {
-            DisplayContent.TryGetValue(UniqueId, out var xamlDisplayInstanceData);
+        private void Reset() {
+            if (!DisplayContent.TryGetValue(UniqueId, out var xamlDisplayInstanceData)) return;
+            if (!string.IsNullOrEmpty(XamlText)) {
+                var namespaceAliases = XamlFilesNamespaceAliases[xamlDisplayInstanceData.FileName];
+                Content = AvaloniaRuntimeXamlLoaderHelper.Parse(xamlDisplayInstanceData.Data, namespaceAliases);
+            }
             XamlText = xamlDisplayInstanceData.Data;
         }
 
         #region ShowMeTheXaml static data
 
         private static Dictionary<string, XamlDisplayInstanceData>? _displayContent;
+        private static Dictionary<string, Dictionary<string, string>>? _xamlFilesNamespaceAliases;
 
         public static Dictionary<string, XamlDisplayInstanceData> DisplayContent {
-            get => _displayContent ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
-                                                                       "Also check \"Getting started\" on our Github");
+            get => _displayContent
+                ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
+                                                    "Also check \"Getting started\" on our Github");
             set => _displayContent = value;
+        }
+
+        public static Dictionary<string, Dictionary<string, string>> XamlFilesNamespaceAliases {
+            get => _xamlFilesNamespaceAliases
+                ?? throw new NullReferenceException("Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
+                                                    "Also check \"Getting started\" on our Github");
+            set => _xamlFilesNamespaceAliases = value;
         }
 
         #endregion
