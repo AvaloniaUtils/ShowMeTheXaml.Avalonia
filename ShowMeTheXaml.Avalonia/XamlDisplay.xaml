@@ -32,36 +32,45 @@
             </Grid>
           </Viewbox>
           <Popup Name="XamlPopup" Grid.Column="1" IsLightDismissEnabled="True">
-            <Grid RowDefinitions="* 4 Auto 4 Auto" ColumnDefinitions="* 8 Auto 8 Auto">
-              <ScrollViewer Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5"
-                            MinWidth="300" MaxWidth="800" MaxHeight="400" MinHeight="200"
-                            VerticalAlignment="Top"
-                            Background="{TemplateBinding Background}"
-                            HorizontalScrollBarVisibility="Disabled">
-                <TextBox Name="MarkupTextBox"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                         TextWrapping="Wrap"
-                         Text="{TemplateBinding XamlText, Mode=OneWay}" />
-              </ScrollViewer>
-              <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="5"
-                         MaxWidth="{Binding #MarkupTextBox.Bounds.Width}"
-                         TextWrapping="Wrap"
-                         Name="MarkupErrorsTextBlock" />
-              <Button Grid.Column="2" Grid.Row="4"
-                      Name="ResetButton">
-                Reset
-              </Button>
-              <Button Grid.Column="4" Grid.Row="4"
-                      Name="ApplyButton">
-                Apply
-              </Button>
-            </Grid>
+            <Border Padding="2" 
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding Foreground}" BorderThickness="1">
+              <Grid RowDefinitions="* 4 Auto" ColumnDefinitions="* 8 Auto 8 Auto">
+                <ScrollViewer Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5"
+                              HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible"
+                              MaxHeight="600">
+                  <TextBox Name="MarkupTextBox"
+                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                           MinWidth="300" MaxWidth="600"
+                           TextWrapping="Wrap" AcceptsReturn="True"
+                           Text="{TemplateBinding XamlText, Mode=OneWay}" />
+                </ScrollViewer>
+                <Rectangle Grid.Column="0" Grid.Row="2"
+                           Name="MaxSizer"
+                           VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                           MaxWidth="{Binding #MaxSizer.Bounds.Width}"
+                           TextWrapping="Wrap"
+                           Name="MarkupErrorsTextBlock" />
+                <Button Grid.Column="2" Grid.Row="2"
+                        VerticalAlignment="Top"
+                        Name="ResetButton">
+                  Reset
+                </Button>
+                <Button Grid.Column="4" Grid.Row="2"
+                        VerticalAlignment="Top"
+                        Name="ApplyButton">
+                  Apply
+                </Button>
+              </Grid>
+            </Border>
             <Interaction.Behaviors>
-              <showMeTheXaml:XamlDisplayPopupBehavior 
+              <showMeTheXaml:XamlDisplayPopupBehavior
                 ApplyButton="{Binding ElementName=ApplyButton}"
                 ResetButton="{Binding ElementName=ResetButton}"
                 MarkupErrorsTextBlock="{Binding ElementName=MarkupErrorsTextBlock}"
-                MarkupTextBox="{Binding ElementName=MarkupTextBox}"/>
+                MarkupTextBox="{Binding ElementName=MarkupTextBox}" />
             </Interaction.Behaviors>
           </Popup>
         </Grid>

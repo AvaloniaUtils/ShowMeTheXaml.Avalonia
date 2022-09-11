@@ -87,6 +87,7 @@ public class XamlDisplayPopupBehavior : Behavior<Popup> {
         xamlDisplay.Reset();
         // Force reset text
         MarkupTextBox.Text = xamlDisplay.XamlText;
+        LoadMarkupOrPrintErrors(xamlDisplay.XamlText!);
     }
 
     private object? LoadMarkupOrPrintErrors(string xaml) {
