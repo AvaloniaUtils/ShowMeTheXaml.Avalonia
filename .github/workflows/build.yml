@@ -3,10 +3,11 @@ name: CI Build
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  BUILD_VERSION: 1.1.0
+  BUILD_VERSION: 1.1.0-avalonia11
   PACKAGE_RELEASE_NOTES: |
     All ShowMeTheXaml.Avalonia packages now have consistent versions
     ShowMeTheXaml.Avalonia.AvaloniaEdit: Rework and improvements
+    Add Avalonia 11 support
 
 on:
   push:

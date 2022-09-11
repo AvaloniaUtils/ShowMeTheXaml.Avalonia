@@ -15,10 +15,11 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.12" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.12" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ShowMeTheXaml.Avalonia.AvaloniaEdit\ShowMeTheXaml.Avalonia.AvaloniaEdit.csproj" />
