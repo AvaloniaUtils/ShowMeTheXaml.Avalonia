@@ -21,16 +21,16 @@ public class XamlDisplayPopupBehavior : Behavior<Popup> {
         = AvaloniaProperty.RegisterDirect<XamlDisplayPopupBehavior, Button>("ResetButton",
             o => o.ResetButton,
             (o, v) => o.ResetButton = v);
-    public static readonly DirectProperty<XamlDisplayPopupBehavior, TextBlock> MarkupErrorsTextBlockProperty
-        = AvaloniaProperty.RegisterDirect<XamlDisplayPopupBehavior, TextBlock>("MarkupErrorsTextBlock",
-            o => o.MarkupErrorsTextBlock,
-            (o, v) => o.MarkupErrorsTextBlock = v);
+    public static readonly DirectProperty<XamlDisplayPopupBehavior, TextBox> MarkupErrorsTextBoxProperty
+        = AvaloniaProperty.RegisterDirect<XamlDisplayPopupBehavior, TextBox>("MarkupErrorsTextBlock",
+            o => o.MarkupErrorsTextBox,
+            (o, v) => o.MarkupErrorsTextBox = v);
     public static readonly DirectProperty<XamlDisplayPopupBehavior, TextBox> MarkupTextBoxProperty
         = AvaloniaProperty.RegisterDirect<XamlDisplayPopupBehavior, TextBox>("MarkupTextBox",
             o => o.MarkupTextBox,
             (o, v) => o.MarkupTextBox = v);
     private Button _applyButton = null!;
-    private TextBlock _markupErrorsTextBlock = null!;
+    private TextBox _markupErrorsTextBlock = null!;
     private TextBox _markupTextBox = null!;
     private Button _resetButton = null!;
     private Dictionary<string, string>? _cachedNamespaceAliases;
@@ -46,9 +46,9 @@ public class XamlDisplayPopupBehavior : Behavior<Popup> {
         set => SetAndRaise(ResetButtonProperty, ref _resetButton, value);
     }
 
-    public TextBlock MarkupErrorsTextBlock {
+    public TextBox MarkupErrorsTextBox {
         get => _markupErrorsTextBlock;
-        set => SetAndRaise(MarkupErrorsTextBlockProperty, ref _markupErrorsTextBlock, value);
+        set => SetAndRaise(MarkupErrorsTextBoxProperty, ref _markupErrorsTextBlock, value);
     }
 
     public TextBox MarkupTextBox {
@@ -94,11 +94,11 @@ public class XamlDisplayPopupBehavior : Behavior<Popup> {
         try {
             _cachedNamespaceAliases ??= LocateXamlDisplay().CurrentFileNamespaceAliases;
             var result = AvaloniaRuntimeXamlLoaderHelper.Parse(xaml, _cachedNamespaceAliases);
-            MarkupErrorsTextBlock.Text = string.Empty;
+            MarkupErrorsTextBox.Text = string.Empty;
             return result;
         }
         catch (XmlException e) {
-            MarkupErrorsTextBlock.Text = e.Message;
+            MarkupErrorsTextBox.Text = e.Message;
         }
         return null;
     }
