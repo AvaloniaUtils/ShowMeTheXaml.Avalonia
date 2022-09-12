@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
@@ -21,7 +22,7 @@ using TextRunProperties = AvaloniaEdit.Text.TextRunProperties;
 
 namespace ShowMeTheXaml.Avalonia.AvaloniaEdit;
 
-public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<Popup> {
+public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
     public static readonly DirectProperty<XamlDisplayAvaloniaEditPopupBehavior, TextEditor> MarkupTextEditorProperty
         = AvaloniaProperty.RegisterDirect<XamlDisplayAvaloniaEditPopupBehavior, TextEditor>("MarkupTextEditor",
             o => o.MarkupTextEditor,
@@ -118,7 +119,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<Popup> {
     }
 
     private XamlDisplay LocateXamlDisplay() =>
-        AssociatedObject.FindAncestorOfType<XamlDisplay>();
+        AssociatedObject.FindLogicalAncestorOfType<XamlDisplay>();
 
     private class ErrorsElementGenerator : VisualLineElementGenerator {
         public int ExceptionPosition { get; set; } = -1;
