@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:showMeTheXaml="clr-namespace:ShowMeTheXaml;assembly=ShowMeTheXaml.Avalonia"
+        xmlns:models="clr-namespace:ShowMeTheXaml.Avalonia.Demo.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ShowMeTheXaml.Avalonia.Demo.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -12,17 +13,35 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
   <StackPanel>
-    <ToggleSwitch Name="StyleToggleSwitch"
-                  OffContent="Default style" OnContent="AvaloniaEdit style"
-                  IsChecked="True"
-                  Click="StyleToggleSwitch_OnClick"
-                  />
+    <Grid RowDefinitions="Auto Auto *">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <ComboBox Name="StyleSelector"
+                  SelectionChanged="StyleSelector_OnSelectionChanged"
+                  Margin="4"
+                  SelectedIndex="0">
+          <ComboBoxItem>AvaloniaEdit Style</ComboBoxItem>
+          <ComboBoxItem>Default Style</ComboBoxItem>
+        </ComboBox>
+        <ComboBox x:Name="ThemeSelector"
+                  SelectionChanged="ThemeSelector_OnSelectionChanged"
+                  Margin="4"
+                  SelectedIndex="1">
+          <ComboBox.Items>
+            <models:CatalogTheme>FluentLight</models:CatalogTheme>
+            <models:CatalogTheme>FluentDark</models:CatalogTheme>
+            <models:CatalogTheme>SimpleLight</models:CatalogTheme>
+            <models:CatalogTheme>SimpleDark</models:CatalogTheme>
+          </ComboBox.Items>
+        </ComboBox>
+      </StackPanel>
+    </Grid>
+
     <showMeTheXaml:XamlDisplay UniqueId="123">
       <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
     </showMeTheXaml:XamlDisplay>
     <showMeTheXaml:XamlDisplay UniqueId="1">
-      <Canvas Background="Yellow" Width="300" Height="400">
-        <Rectangle Fill="Blue" Width="63" Height="41" Canvas.Left="40" Canvas.Top="31">
+      <Canvas Background="Yellow" Width="300" Height="150">
+        <Rectangle Fill="Blue" Width="63" Height="41" Canvas.Left="20" Canvas.Top="11">
           <Rectangle.OpacityMask>
             <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
               <LinearGradientBrush.GradientStops>
@@ -32,10 +51,10 @@
             </LinearGradientBrush>
           </Rectangle.OpacityMask>
         </Rectangle>
-        <Ellipse Fill="Green" Width="58" Height="58" Canvas.Left="88" Canvas.Top="100" />
+        <Ellipse Fill="Green" Width="58" Height="58" Canvas.Left="48" Canvas.Top="50" />
         <Path Fill="Orange" Data="M 0,0 c 0,0 50,0 50,-50 c 0,0 50,0 50,50 h -50 v 50 l -50,-50 Z"
-              Canvas.Left="30" Canvas.Top="250" />
-        <Path Fill="OrangeRed" Canvas.Left="180" Canvas.Top="250">
+              Canvas.Left="100" Canvas.Top="50" />
+        <Path Fill="OrangeRed" Canvas.Left="80" Canvas.Top="100">
           <Path.Data>
             <PathGeometry>
               <PathFigure StartPoint="0,0" IsClosed="True">
@@ -47,11 +66,11 @@
             </PathGeometry>
           </Path.Data>
         </Path>
-        <Line StartPoint="120,185" EndPoint="30,115" Stroke="Red" StrokeThickness="2" />
+        <Line StartPoint="120,145" EndPoint="30,115" Stroke="Red" StrokeThickness="2" />
         <Polygon Points="75,0 120,120 0,45 150,45 30,120" Stroke="DarkBlue" StrokeThickness="1" Fill="Violet"
-                 Canvas.Left="150" Canvas.Top="31" />
-        <Polyline Points="0,0 65,0 78,-26 91,39 104,-39 117,13 130,0 195,0" Stroke="Brown" Canvas.Left="30"
-                  Canvas.Top="350" />
+                 Canvas.Left="150" Canvas.Top="10" />
+        <Polyline Points="0,0 65,0 78,-26 91,39 104,-39 117,13 130,0 195,0" Stroke="Brown"
+                  Canvas.Left="30" Canvas.Top="50" />
       </Canvas>
     </showMeTheXaml:XamlDisplay>
   </StackPanel>

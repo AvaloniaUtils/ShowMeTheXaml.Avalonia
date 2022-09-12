@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
+using ShowMeTheXaml.Avalonia.Demo.Models;
 
 namespace ShowMeTheXaml.Avalonia.Demo.Views {
     public class MainWindow : Window {
@@ -19,15 +20,32 @@ namespace ShowMeTheXaml.Avalonia.Demo.Views {
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void StyleToggleSwitch_OnClick(object sender, RoutedEventArgs e) {
-            var lastStyle = Application.Current!.Styles.Last();
-            Application.Current.Styles.Remove(lastStyle);
 
-            var styleSource = (bool)((ToggleSwitch)sender).IsChecked!
-                ? new Uri("avares://ShowMeTheXaml.Avalonia.AvaloniaEdit/XamlDisplayStyles.axaml")
-                : new Uri("avares://ShowMeTheXaml.Avalonia/XamlDisplay.xaml");
-            var styleInclude = new StyleInclude(new Uri("avares://ShowMeTheXaml.Avalonia.Demo/App.xaml")) {Source = styleSource};
-            Application.Current.Styles.Add(styleInclude);
+        private void StyleSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            var styleSource = ((ComboBox)sender).SelectedIndex == 0
+                ? App.XamlDisplayAvaloniaEditStyles
+                : App.XamlDisplayDefaultStyles;
+            Application.Current!.Styles[1] = styleSource;
+        }
+
+        private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            var theme = (CatalogTheme)((ComboBox)sender).SelectedItem!;
+            if (theme == CatalogTheme.FluentLight)
+            {
+                Application.Current!.Styles[0] = App.FluentLight;
+            }
+            else if (theme == CatalogTheme.FluentDark)
+            {
+                Application.Current!.Styles[0] = App.FluentDark;
+            }
+            else if (theme == CatalogTheme.SimpleLight)
+            {
+                Application.Current!.Styles[0] = App.SimpleLight;
+            }
+            else if (theme == CatalogTheme.SimpleDark)
+            {
+                Application.Current!.Styles[0] = App.SimpleDark;
+            }
         }
     }
 }
