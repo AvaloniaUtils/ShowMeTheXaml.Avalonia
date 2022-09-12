@@ -21,6 +21,14 @@ namespace ShowMeTheXaml {
         public static readonly StyledProperty<AlignmentY> XamlButtonAlignmentProperty =
             AvaloniaProperty.Register<XamlDisplay, AlignmentY>(nameof(XamlButtonAlignment), AlignmentY.Bottom);
 
+        public static readonly StyledProperty<bool> IsEditableProperty = 
+            AvaloniaProperty.Register<XamlDisplay, bool>("IsEditable", true);
+
+        public bool IsEditable {
+            get => GetValue(IsEditableProperty);
+            set => SetValue(IsEditableProperty, value);
+        }
+
         private IDisposable? _buttonClickHandler;
         private Popup? _popup;
         private string _uniqueId = null!;

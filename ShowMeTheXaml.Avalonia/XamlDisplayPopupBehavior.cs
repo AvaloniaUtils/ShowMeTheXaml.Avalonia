@@ -6,13 +6,14 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Avalonia.Xaml.Interactivity;
 
 namespace ShowMeTheXaml;
 
-public class XamlDisplayPopupBehavior : Behavior<Popup> {
+public class XamlDisplayPopupBehavior : Behavior<IControl> {
     public static readonly DirectProperty<XamlDisplayPopupBehavior, Button> ApplyButtonProperty
         = AvaloniaProperty.RegisterDirect<XamlDisplayPopupBehavior, Button>("ApplyButton",
             o => o.ApplyButton,
@@ -104,5 +105,5 @@ public class XamlDisplayPopupBehavior : Behavior<Popup> {
     }
 
     private XamlDisplay LocateXamlDisplay() =>
-        AssociatedObject.FindAncestorOfType<XamlDisplay>();
+        AssociatedObject.FindLogicalAncestorOfType<XamlDisplay>();
 }
