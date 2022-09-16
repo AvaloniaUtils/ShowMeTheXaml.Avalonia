@@ -14,8 +14,6 @@ using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit.Rendering;
-using TextRun = AvaloniaEdit.Text.TextRun;
-using TextRunProperties = AvaloniaEdit.Text.TextRunProperties;
 
 namespace ShowMeTheXaml.Avalonia.AvaloniaEdit;
 
@@ -155,26 +153,22 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
         private static readonly PolylineGeometry PolylineGeometry = new() { Points = new Points { new(0, 5), new(5, 0), new(10, 5) } };
         private double? _cachedLineHeight;
         private TextView _textView = null!;
-        private ErrorInfoObjectRun(int length, TextRunProperties properties, IControl errorInfoTextBlock)
+        private ErrorInfoObjectRun(int length, TextRunProperties properties, Control errorInfoTextBlock)
             : base(length, properties, errorInfoTextBlock) { }
         public static ErrorInfoObjectRun CreateInstance(int length, TextRunProperties properties, string exceptionText, TextView contextTextView) {
-            var myRect = new ErrorInfoTextBlock(exceptionText, GetDefaultLineHeight(properties.FontMetrics));
+            var defaultLineHeight = properties.FontRenderingEmSize * 1.35;
+            var myRect = new ErrorInfoTextBlock(exceptionText, defaultLineHeight);
             var testInlineObjectRun = new ErrorInfoObjectRun(length, properties, myRect) { _textView = contextTextView };
             return testInlineObjectRun;
         }
 
         public override void Draw(DrawingContext drawingContext, Point origin) {
-            PolylineGeometry.Transform = new TranslateTransform(origin.X - 5, origin.Y + Math.Round(Properties.FontMetrics.LineHeight) - 3);
+            var lineSize = Math.Round(Properties!.FontRenderingEmSize * 1.35);
+            PolylineGeometry.Transform = new TranslateTransform(origin.X - 5, lineSize - 5);
             drawingContext.DrawGeometry(BackgroundSolidColorBrush, null, PolylineGeometry);
 
-            var defaultLineHeight = _cachedLineHeight ??= Math.Round(GetDefaultLineHeight(Properties.FontMetrics));
-            drawingContext.DrawRectangle(BackgroundSolidColorBrush, null, new Rect(0, origin.Y + defaultLineHeight, _textView.Bounds.Width, Element.DesiredSize.Height - defaultLineHeight));
-        }
-
-        private static double GetDefaultLineHeight(FontMetrics fontMetrics) {
-            // adding an extra 15% of the line height look good across different font sizes
-            var extraLineHeight = fontMetrics.LineHeight * 0.15;
-            return fontMetrics.LineHeight + extraLineHeight;
+            var defaultLineHeight = _cachedLineHeight ??= Math.Round(Properties.FontRenderingEmSize * 1.35);
+            drawingContext.DrawRectangle(BackgroundSolidColorBrush, null, new Rect(0, defaultLineHeight, _textView.Bounds.Width, Element.DesiredSize.Height - defaultLineHeight));
         }
     }
 
