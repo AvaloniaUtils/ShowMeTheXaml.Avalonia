@@ -101,6 +101,9 @@ public class XamlDisplayPopupBehavior : Behavior<IControl> {
         catch (XmlException e) {
             MarkupErrorsTextBox.Text = e.Message;
         }
+        catch (Exception e) {
+            MarkupErrorsTextBox.Text = e.Message;
+        }
         return null;
     }
 

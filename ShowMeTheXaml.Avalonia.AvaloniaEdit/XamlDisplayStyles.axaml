@@ -62,6 +62,17 @@
                 </Interaction.Behaviors>
               </avaloniaEdit:TextEditor>
             </ScrollViewer>
+            <Rectangle Grid.Column="0" Grid.Row="2"
+                       Name="MaxSizer"
+                       VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Column="0" Grid.Row="2"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     MaxWidth="{Binding #MaxSizer.Bounds.Width}"
+                     IsReadOnly="True" TextWrapping="Wrap"
+                     IsVisible="False"
+                     Name="CommonErrorsTextBox" />
             <Button Grid.Column="2" Grid.Row="2"
                     Name="ResetButton">
               Reset
@@ -73,6 +84,7 @@
             <Interaction.Behaviors>
               <avaloniaEdit1:XamlDisplayAvaloniaEditPopupBehavior
                 MarkupTextEditor="{Binding ElementName=MarkupTextEditor}"
+                CommonErrorsTextBox="{Binding ElementName=CommonErrorsTextBox}"
                 ApplyButton="{Binding ElementName=ApplyButton}"
                 ResetButton="{Binding ElementName=ResetButton}" />
             </Interaction.Behaviors>

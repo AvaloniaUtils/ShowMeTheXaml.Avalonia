@@ -5,7 +5,6 @@ using System.Reactive.Linq;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
@@ -14,19 +13,13 @@ using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
-using Avalonia.Xaml.Interactivity;
-using AvaloniaEdit;
 using AvaloniaEdit.Rendering;
 using TextRun = AvaloniaEdit.Text.TextRun;
 using TextRunProperties = AvaloniaEdit.Text.TextRunProperties;
 
 namespace ShowMeTheXaml.Avalonia.AvaloniaEdit;
 
-public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
-    public static readonly DirectProperty<XamlDisplayAvaloniaEditPopupBehavior, TextEditor> MarkupTextEditorProperty
-        = AvaloniaProperty.RegisterDirect<XamlDisplayAvaloniaEditPopupBehavior, TextEditor>("MarkupTextEditor",
-            o => o.MarkupTextEditor,
-            (o, v) => o.MarkupTextEditor = v);
+public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextBindingBehavior {
     public static readonly DirectProperty<XamlDisplayAvaloniaEditPopupBehavior, Button> ApplyButtonProperty
         = AvaloniaProperty.RegisterDirect<XamlDisplayAvaloniaEditPopupBehavior, Button>("ApplyButton",
             o => o.ApplyButton,
@@ -35,17 +28,16 @@ public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
         = AvaloniaProperty.RegisterDirect<XamlDisplayAvaloniaEditPopupBehavior, Button>("ResetButton",
             o => o.ResetButton,
             (o, v) => o.ResetButton = v);
+    public static readonly DirectProperty<XamlDisplayAvaloniaEditPopupBehavior, TextBox> CommonErrorsTextBoxProperty
+        = AvaloniaProperty.RegisterDirect<XamlDisplayAvaloniaEditPopupBehavior, TextBox>("CommonErrorsTextBox",
+            o => o.CommonErrorsTextBox,
+            (o, v) => o.CommonErrorsTextBox = v);
     private Button _applyButton = null!;
+    private TextBox _commonErrorsTextBox = null!;
+    private Button _resetButton = null!;
     private Dictionary<string, string>? _cachedNamespaceAliases;
     private ErrorsElementGenerator _errorsElementGenerator = new();
-    private TextEditor _markupTextEditor = null!;
     private IDisposable? _previewErrorsObservable;
-    private Button _resetButton = null!;
-
-    public TextEditor MarkupTextEditor {
-        get => _markupTextEditor;
-        set => SetAndRaise(MarkupTextEditorProperty, ref _markupTextEditor, value);
-    }
 
     public Button ApplyButton {
         get => _applyButton;
@@ -55,6 +47,11 @@ public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
     public Button ResetButton {
         get => _resetButton;
         set => SetAndRaise(ResetButtonProperty, ref _resetButton, value);
+    }
+
+    public TextBox CommonErrorsTextBox {
+        get => _commonErrorsTextBox;
+        set => SetAndRaise(CommonErrorsTextBoxProperty, ref _commonErrorsTextBox, value);
     }
 
     protected override void OnAttachedToVisualTree() {
@@ -71,7 +68,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
         if (MarkupTextEditor.TextArea.TextView.ElementGenerators.Contains(_errorsElementGenerator)) return;
         // First time attached to tree
         MarkupTextEditor.TextArea.TextView.ElementGenerators.Add(_errorsElementGenerator);
-        MarkupTextEditor.Text = LocateXamlDisplay().XamlText;
+        CommonErrorsTextBox.IsVisible = false;
     }
 
     protected override void OnDetachedFromVisualTree() {
@@ -102,6 +99,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
         try {
             _cachedNamespaceAliases ??= LocateXamlDisplay().CurrentFileNamespaceAliases;
             var result = AvaloniaRuntimeXamlLoaderHelper.Parse(xaml, _cachedNamespaceAliases);
+            CommonErrorsTextBox.IsVisible = false;
             if (_errorsElementGenerator.ExceptionText != null) {
                 _errorsElementGenerator.ExceptionPosition = -1;
                 _errorsElementGenerator.ExceptionText = null;
@@ -110,10 +108,15 @@ public class XamlDisplayAvaloniaEditPopupBehavior : Behavior<IControl> {
             return result;
         }
         catch (XmlException e) {
+            CommonErrorsTextBox.IsVisible = false;
             var errorLine = MarkupTextEditor.Document.GetLineByNumber(e.LineNumber);
             _errorsElementGenerator.ExceptionPosition = errorLine.Offset + e.LinePosition - 1;
             _errorsElementGenerator.ExceptionText = e.Message;
             MarkupTextEditor.TextArea.TextView.Redraw();
+        }
+        catch (Exception e) {
+            CommonErrorsTextBox.IsVisible = true;
+            CommonErrorsTextBox.Text = e.Message;
         }
         return null;
     }

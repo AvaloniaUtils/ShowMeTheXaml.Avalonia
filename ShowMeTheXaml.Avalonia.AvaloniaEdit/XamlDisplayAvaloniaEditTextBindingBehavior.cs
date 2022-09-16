@@ -14,6 +14,7 @@ public class XamlDisplayAvaloniaEditTextBindingBehavior : Behavior<IControl> {
             o => o.MarkupTextEditor,
             (o, v) => o.MarkupTextEditor = v);
     private TextEditor _markupTextEditor = null!;
+    private bool _isTextAssigned;
 
     public TextEditor MarkupTextEditor {
         get => _markupTextEditor;
@@ -22,7 +23,9 @@ public class XamlDisplayAvaloniaEditTextBindingBehavior : Behavior<IControl> {
     
     protected override void OnAttachedToVisualTree() {
         base.OnAttachedToVisualTree();
+        if (_isTextAssigned) return;
         MarkupTextEditor.Text = LocateXamlDisplay().XamlText;
+        _isTextAssigned = true;
     }
     
     private XamlDisplay LocateXamlDisplay() =>
