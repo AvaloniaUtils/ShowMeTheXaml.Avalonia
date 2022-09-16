@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>ShowMeTheXaml.Avalonia</Title>
@@ -13,6 +13,7 @@
         <RepositoryUrl>https://github.com/AvaloniaUtils/ShowMeTheXaml.Avalonia.git</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <PackageTags>avalonia avaloniaui</PackageTags>
+        <RootNamespace>ShowMeTheXaml</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,7 +26,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.0.0-preview1" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-preview1" />
     </ItemGroup>
 
 </Project>

@@ -10,9 +10,6 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Grid ColumnDefinitions="*, Auto">
-          <Grid.Resources>
-            <showMeTheXaml:AlignmentYConverter x:Key="AlignmentYConverter" />
-          </Grid.Resources>
           <Border Grid.Column="0"
                   BorderThickness="4"
                   BorderBrush="{TemplateBinding Foreground}"
@@ -32,11 +29,23 @@
                     Data="M12.89,3L14.85,3.4L11.11,21L9.15,20.6L12.89,3M19.59,12L16,8.41V5.58L22.42,12L16,18.41V15.58L19.59,12M1.58,12L8,5.58V8.41L4.41,12L8,15.58V18.41L1.58,12Z" />
             </Grid>
           </Viewbox>
-          <Popup Name="XamlPopup" Grid.Column="1" IsLightDismissEnabled="True">
-            <ScrollViewer
-              HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible"
-              MaxHeight="600">
-              <avaloniaEdit:TextEditor IsReadOnly="True"
+          <Popup Name="XamlPopup" Grid.Column="1" IsLightDismissEnabled="True" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+
+  <Style Selector="showMeTheXaml|XamlDisplay[IsEditable=True] /template/ Popup#XamlPopup">
+    <Setter Property="Child">
+      <Template>
+        <Border Background="{Binding $parent[showMeTheXaml:XamlDisplay].Background}"
+                BorderBrush="{Binding $parent[showMeTheXaml:XamlDisplay].Foreground}" BorderThickness="1">
+          <Grid RowDefinitions="* 4 Auto" ColumnDefinitions="* 8 Auto 8 Auto" Margin="2">
+            <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5"
+                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible"
+                          MaxHeight="600">
+              <avaloniaEdit:TextEditor Name="MarkupTextEditor"
                                        IsModified="False"
                                        MinWidth="300" MaxWidth="800"
                                        HorizontalAlignment="Left"
@@ -46,18 +55,74 @@
                                        VerticalScrollBarVisibility="Disabled"
                                        WordWrap="True"
                                        ShowLineNumbers="True"
-                                       Foreground="{TemplateBinding Foreground}"
-                                       Background="{TemplateBinding Background}">
+                                       Foreground="{Binding $parent[showMeTheXaml:XamlDisplay].Foreground}"
+                                       Background="{Binding $parent[showMeTheXaml:XamlDisplay].Background}">
                 <Interaction.Behaviors>
-                  <avaloniaEdit1:DocumentTextBindingBehavior
-                    Text="{Binding $parent[showMeTheXaml:XamlDisplay].XamlText}" />
                   <avaloniaEdit1:CustomizeEditorBehavior />
                 </Interaction.Behaviors>
               </avaloniaEdit:TextEditor>
             </ScrollViewer>
-          </Popup>
-        </Grid>
-      </ControlTemplate>
+            <Rectangle Grid.Column="0" Grid.Row="2"
+                       Name="MaxSizer"
+                       VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Column="0" Grid.Row="2"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     MaxWidth="{Binding #MaxSizer.Bounds.Width}"
+                     IsReadOnly="True" TextWrapping="Wrap"
+                     IsVisible="False"
+                     Name="CommonErrorsTextBox" />
+            <Button Grid.Column="2" Grid.Row="2"
+                    Name="ResetButton">
+              Reset
+            </Button>
+            <Button Grid.Column="4" Grid.Row="2"
+                    Name="ApplyButton">
+              Apply
+            </Button>
+            <Interaction.Behaviors>
+              <avaloniaEdit1:XamlDisplayAvaloniaEditPopupBehavior
+                MarkupTextEditor="{Binding ElementName=MarkupTextEditor}"
+                CommonErrorsTextBox="{Binding ElementName=CommonErrorsTextBox}"
+                ApplyButton="{Binding ElementName=ApplyButton}"
+                ResetButton="{Binding ElementName=ResetButton}" />
+            </Interaction.Behaviors>
+          </Grid>
+        </Border>
+      </Template>
+    </Setter>
+  </Style>
+
+  <Style Selector="showMeTheXaml|XamlDisplay[IsEditable=False] /template/ Popup#XamlPopup">
+    <Setter Property="Child">
+      <Template>
+        <Border Background="{Binding $parent[showMeTheXaml:XamlDisplay].Background}"
+                BorderBrush="{Binding $parent[showMeTheXaml:XamlDisplay].Foreground}" BorderThickness="1">
+          <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible"
+                        MaxHeight="600">
+            <avaloniaEdit:TextEditor Name="MarkupTextEditor"
+                                     IsModified="True"
+                                     IsReadOnly="True"
+                                     MinWidth="300" MaxWidth="800"
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Stretch"
+                                     SyntaxHighlighting="XML"
+                                     HorizontalScrollBarVisibility="Disabled"
+                                     VerticalScrollBarVisibility="Disabled"
+                                     WordWrap="True"
+                                     ShowLineNumbers="True"
+                                     Foreground="{Binding $parent[showMeTheXaml:XamlDisplay].Foreground}"
+                                     Background="{Binding $parent[showMeTheXaml:XamlDisplay].Background}">
+              <Interaction.Behaviors>
+                <avaloniaEdit1:CustomizeEditorBehavior />
+                <avaloniaEdit1:XamlDisplayAvaloniaEditTextBindingBehavior
+                  MarkupTextEditor="{Binding ElementName=MarkupTextEditor}" />
+              </Interaction.Behaviors>
+            </avaloniaEdit:TextEditor>
+          </ScrollViewer>
+        </Border>
+      </Template>
     </Setter>
   </Style>
 </Styles>
