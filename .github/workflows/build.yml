@@ -36,7 +36,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Append ci info to version
-        if: github.ref != 'refs/heads/master' 
+        if: ${{ github.ref != 'refs/heads/master' && !contains(github.ref, 'rc/') }}
         run: |
           echo "BUILD_VERSION=$BUILD_VERSION-ci$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           echo "PACKAGE_RELEASE_NOTES=This is the package for CI build $GITHUB_RUN_ID" >> $GITHUB_ENV

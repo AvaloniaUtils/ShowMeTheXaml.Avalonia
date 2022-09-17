@@ -28,7 +28,7 @@ jobs:
         with:
           workflow: build.yml
           workflow_conclusion: success
-          branch: master
+          branch: ${{ github.event.workflow_run.head_branch }}
           name: nupkg
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
