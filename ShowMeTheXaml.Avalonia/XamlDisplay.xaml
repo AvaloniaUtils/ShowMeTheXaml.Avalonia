@@ -14,8 +14,8 @@
   </Style>
   
   <Style Selector="showMeTheXaml|XamlDisplay">
-    <Setter Property="HorizontalAlignment" Value="Center" />
-    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
     <Setter Property="Template">
       <ControlTemplate>
         <Grid ColumnDefinitions="*, Auto">
