@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
+using Avalonia.Themes.Simple;
 using ShowMeTheXaml.Avalonia.Demo.ViewModels;
 using ShowMeTheXaml.Avalonia.Demo.Views;
 
@@ -33,22 +34,10 @@ namespace ShowMeTheXaml.Avalonia.Demo {
         public static readonly StyleInclude XamlDisplayDefaultStyles
             = new StyleInclude(BaseUri) { Source = new Uri("avares://ShowMeTheXaml.Avalonia/XamlDisplay.xaml") };
 
-        public static readonly FluentTheme FluentDark
-            = new FluentTheme(BaseUri) { Mode = FluentThemeMode.Dark };
+        public static readonly FluentTheme Fluent
+            = new FluentTheme();
 
-        public static readonly FluentTheme FluentLight
-            = new FluentTheme(BaseUri) { Mode = FluentThemeMode.Light };
-
-        public static Styles SimpleDark
-            = new Styles {
-                new StyleInclude(BaseUri) { Source = new Uri("avares://Avalonia.Themes.Default/Accents/BaseDark.xaml") },
-                new StyleInclude(BaseUri) { Source = new Uri("avares://Avalonia.Themes.Default/DefaultTheme.xaml") }
-            };
-
-        public static Styles SimpleLight
-            = new Styles {
-                new StyleInclude(BaseUri) { Source = new Uri("avares://Avalonia.Themes.Default/Accents/BaseLight.xaml") },
-                new StyleInclude(BaseUri) { Source = new Uri("avares://Avalonia.Themes.Default/DefaultTheme.xaml") }
-            };
+        public static SimpleTheme Simple
+            = new SimpleTheme();
     }
 }

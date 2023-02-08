@@ -8,6 +8,7 @@ namespace ShowMeTheXaml.Avalonia;
 public static class ShowMeTheXamlCodeTemplatesGenerator {
     private const string XamlDisplayInternalDataTemplate = """
     using System.Collections.Generic;
+    using Avalonia;
     using Avalonia.Controls;
     using ShowMeTheXaml;
 
@@ -26,8 +27,7 @@ public static class ShowMeTheXamlCodeTemplatesGenerator {
             /// <summary>
             /// Loads data for xaml displays
             /// </summary>
-            public static TAppBuilder UseXamlDisplay<TAppBuilder>(this TAppBuilder builder)
-                where TAppBuilder : AppBuilderBase<TAppBuilder>, new()
+            public static AppBuilder UseXamlDisplay(this AppBuilder builder)
             {{
                 RegisterXamlDisplayData();
                 return builder;

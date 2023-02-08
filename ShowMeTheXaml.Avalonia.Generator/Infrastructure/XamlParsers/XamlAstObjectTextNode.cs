@@ -1,13 +1,12 @@
 using System.Linq;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using XamlX.Ast;
 
 namespace ShowMeTheXaml.Avalonia.Infrastructure.XamlParsers;
 
 public class XamlAstObjectTextNode : XamlAstObjectNode {
     public XElement _element;
-    [CanBeNull] private string _elementText;
+    private string? _elementText;
     public XamlAstObjectTextNode(IXamlLineInfo lineInfo, IXamlAstTypeReference type, XElement element) : base(lineInfo, type) {
         _element = element;
     }

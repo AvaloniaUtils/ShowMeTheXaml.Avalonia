@@ -29,22 +29,20 @@ namespace ShowMeTheXaml.Avalonia.Demo.Views {
         }
 
         private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var theme = (CatalogTheme)((ComboBox)sender).SelectedItem!;
-            if (theme == CatalogTheme.FluentLight)
-            {
-                Application.Current!.Styles[0] = App.FluentLight;
+            try {
+                var theme = (CatalogTheme)((ComboBox)sender).SelectedItem!;
+                if (theme == CatalogTheme.Fluent)
+                {
+                    Application.Current!.Styles[0] = App.Fluent;
+                }
+                else if (theme == CatalogTheme.Simple)
+                {
+                    Application.Current!.Styles[0] = App.Simple;
+                }
             }
-            else if (theme == CatalogTheme.FluentDark)
-            {
-                Application.Current!.Styles[0] = App.FluentDark;
-            }
-            else if (theme == CatalogTheme.SimpleLight)
-            {
-                Application.Current!.Styles[0] = App.SimpleLight;
-            }
-            else if (theme == CatalogTheme.SimpleDark)
-            {
-                Application.Current!.Styles[0] = App.SimpleDark;
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                throw;
             }
         }
     }

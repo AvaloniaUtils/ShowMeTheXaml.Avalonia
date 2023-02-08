@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
@@ -58,7 +59,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
                 action => MarkupTextEditor.TextChanged += action,
                 action => MarkupTextEditor.TextChanged -= action)
             .Throttle(TimeSpan.FromMilliseconds(500))
-            .ObserveOn(AvaloniaScheduler.Instance)
+            .ObserveOn(SynchronizationContext.Current)
             .Select(pattern => MarkupTextEditor.Text)
             .Subscribe(s => LoadMarkupOrPrintErrors(s));
         ResetButton.Click += ResetButtonOnClick;
@@ -175,7 +176,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
 
     private class ErrorInfoTextBlock : SelectableTextBlock {
         private readonly double _defaultLineHeight;
-        private Rect _lastBounds = Rect.Empty;
+        private Rect _lastBounds;
         private TextView? _textView;
         public ErrorInfoTextBlock(string text, double defaultLineHeight) {
             _defaultLineHeight = defaultLineHeight;

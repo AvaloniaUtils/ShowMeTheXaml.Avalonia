@@ -27,10 +27,8 @@
                   Margin="4"
                   SelectedIndex="1">
           <ComboBox.Items>
-            <models:CatalogTheme>FluentLight</models:CatalogTheme>
-            <models:CatalogTheme>FluentDark</models:CatalogTheme>
-            <models:CatalogTheme>SimpleLight</models:CatalogTheme>
-            <models:CatalogTheme>SimpleDark</models:CatalogTheme>
+            <models:CatalogTheme>Fluent</models:CatalogTheme>
+            <models:CatalogTheme>Simple</models:CatalogTheme>
           </ComboBox.Items>
         </ComboBox>
       </StackPanel>
