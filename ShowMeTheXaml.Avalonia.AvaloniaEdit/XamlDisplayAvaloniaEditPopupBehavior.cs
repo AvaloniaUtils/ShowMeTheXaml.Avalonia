@@ -120,7 +120,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
     }
 
     private XamlDisplay LocateXamlDisplay() =>
-        AssociatedObject.FindLogicalAncestorOfType<XamlDisplay>();
+        AssociatedObject!.FindLogicalAncestorOfType<XamlDisplay>()!;
 
     private class ErrorsElementGenerator : VisualLineElementGenerator {
         public int ExceptionPosition { get; set; } = -1;
@@ -139,6 +139,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
         private readonly string _exceptionText;
         public ErrorInfoInlineElement(int visualLength, int documentLength, string exceptionText) : base(visualLength, documentLength) {
             _exceptionText = exceptionText;
+            BackgroundBrush = Brushes.Transparent;
         }
         public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context) {
             if (context == null)
@@ -149,7 +150,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
     }
 
     private class ErrorInfoObjectRun : InlineObjectRun {
-        private static readonly ImmutableSolidColorBrush BackgroundSolidColorBrush = new(Colors.Red, 0.3);
+        private static readonly ImmutableSolidColorBrush BackgroundSolidColorBrush = new(Colors.Red);
         private static readonly PolylineGeometry PolylineGeometry = new() { Points = new Points { new(0, 5), new(5, 0), new(10, 5) } };
         private double? _cachedLineHeight;
         private TextView _textView = null!;
@@ -172,8 +173,10 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
         }
     }
 
-    private class ErrorInfoTextBlock : TextBlock {
+    private class ErrorInfoTextBlock : SelectableTextBlock {
         private readonly double _defaultLineHeight;
+        private Rect _lastBounds = Rect.Empty;
+        private TextView? _textView;
         public ErrorInfoTextBlock(string text, double defaultLineHeight) {
             _defaultLineHeight = defaultLineHeight;
             Text = text;
@@ -182,16 +185,26 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
             VerticalAlignment = VerticalAlignment.Top;
             TextWrapping = TextWrapping.Wrap;
             Margin = new Thickness(0, defaultLineHeight, 0, -defaultLineHeight);
+            Background = new SolidColorBrush(Colors.Red);
         }
         protected override Size MeasureOverride(Size availableSize) {
-            var textView = (TextView)this.GetVisualAncestors().FirstOrDefault(visual => visual is TextView)!;
-            var (_, height) = base.MeasureOverride(new Size(textView.Bounds.Width, double.PositiveInfinity));
-            return new Size(1, _defaultLineHeight + height);
+            var width = GetTextView().Bounds.Width;
+            var (_, height) = base.MeasureOverride(new Size(width, double.PositiveInfinity));
+            _lastBounds = new Rect(0, 0, width, height);
+            return new Size(0, _defaultLineHeight + height);
         }
 
         protected override void ArrangeCore(Rect finalRect) {
             base.ArrangeCore(finalRect);
             Bounds = Bounds.WithX(0);
         }
+
+        /// <inheritdoc />
+        public override void Render(DrawingContext context) {
+            if (Background != null) context.FillRectangle(Background, _lastBounds);
+            base.Render(context);
+        }
+        
+        private TextView GetTextView() => _textView ??= (TextView)this.GetVisualAncestors().FirstOrDefault(visual => visual is TextView)!;
     }
 }
