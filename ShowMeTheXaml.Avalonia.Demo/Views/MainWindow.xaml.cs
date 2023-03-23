@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml.Styling;
 using ShowMeTheXaml.Avalonia.Demo.Models;
 
 namespace ShowMeTheXaml.Avalonia.Demo.Views {
-    public class MainWindow : Window {
+    public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
             DevTools.Attach(this, new KeyGesture(Key.F12));
