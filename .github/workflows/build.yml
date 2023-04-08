@@ -3,13 +3,12 @@ name: CI Build
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  BUILD_VERSION: 1.2.0-avalonia11-preview3
+  BUILD_VERSION: 1.2.0-avalonia11-preview4
   PACKAGE_RELEASE_NOTES: |
     Allow edit sources xaml at runtime%2c apply result and see errors. Add IsEditable property to XamlDisplay
     Add xaml namespaces and aliases to generated data
     Add XamlDisplay content to logical tree for easy dev tools use
-    Add Avalonia 11 support
-    Add Avalonia 11 preview 6 support (except AvaloniaEdit)
+    Add Avalonia 11 preview 6 support
 # NOTE: Instead of , use %2c
 
 on:
