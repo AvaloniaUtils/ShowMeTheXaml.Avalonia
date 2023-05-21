@@ -3,7 +3,11 @@
         xmlns:showMeTheXaml="clr-namespace:ShowMeTheXaml;assembly=ShowMeTheXaml.Avalonia"
         xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         xmlns:avaloniaEdit1="clr-namespace:ShowMeTheXaml.Avalonia.AvaloniaEdit"
+        xmlns:system="clr-namespace:System;assembly=netstandard"
         x:Class="ShowMeTheXaml.Avalonia.AvaloniaEdit.XamlDisplayStyles">
+  <Styles.Resources>
+    <system:Double x:Key="ControlContentThemeFontSize">14</system:Double>
+  </Styles.Resources>
   <StyleInclude Source="avares://ShowMeTheXaml.Avalonia/XamlDisplay.xaml" />
   <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
   <Style Selector="showMeTheXaml|XamlDisplay">
