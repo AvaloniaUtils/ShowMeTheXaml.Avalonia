@@ -13,13 +13,7 @@ namespace ShowMeTheXaml.Avalonia.Demo.Views {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            DevTools.Attach(this, new KeyGesture(Key.F12));
         }
-
-        private void InitializeComponent() {
-            AvaloniaXamlLoader.Load(this);
-        }
-
 
         private void StyleSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             var styleSource = ((ComboBox)sender).SelectedIndex == 0

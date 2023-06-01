@@ -201,11 +201,11 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
         }
 
         /// <inheritdoc />
-        protected override void RenderCore(DrawingContext context) {
+        protected override void RenderTextLayout(DrawingContext context, Point origin) {
             if (Background != null) context.FillRectangle(Background, _lastBounds);
-            base.RenderCore(context);
+            base.RenderTextLayout(context, origin);
         }
-        
+
         private TextView GetTextView() => _textView ??= (TextView)this.GetVisualAncestors().FirstOrDefault(visual => visual is TextView)!;
     }
 }
