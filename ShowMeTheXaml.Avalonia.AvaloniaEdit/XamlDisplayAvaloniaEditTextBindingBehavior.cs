@@ -8,7 +8,7 @@ using AvaloniaEdit;
 
 namespace ShowMeTheXaml.Avalonia.AvaloniaEdit; 
 
-public class XamlDisplayAvaloniaEditTextBindingBehavior : Behavior<IControl> {
+public class XamlDisplayAvaloniaEditTextBindingBehavior : Behavior<Control> {
     public static readonly DirectProperty<XamlDisplayAvaloniaEditTextBindingBehavior, TextEditor> MarkupTextEditorProperty
         = AvaloniaProperty.RegisterDirect<XamlDisplayAvaloniaEditTextBindingBehavior, TextEditor>("MarkupTextEditor",
             o => o.MarkupTextEditor,
@@ -29,5 +29,5 @@ public class XamlDisplayAvaloniaEditTextBindingBehavior : Behavior<IControl> {
     }
     
     private XamlDisplay LocateXamlDisplay() =>
-        AssociatedObject.FindLogicalAncestorOfType<XamlDisplay>();
+        AssociatedObject!.FindLogicalAncestorOfType<XamlDisplay>()!;
 }

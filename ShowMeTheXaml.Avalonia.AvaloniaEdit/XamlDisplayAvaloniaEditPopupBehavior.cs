@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
@@ -14,8 +15,6 @@ using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit.Rendering;
-using TextRun = AvaloniaEdit.Text.TextRun;
-using TextRunProperties = AvaloniaEdit.Text.TextRunProperties;
 
 namespace ShowMeTheXaml.Avalonia.AvaloniaEdit;
 
@@ -60,7 +59,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
                 action => MarkupTextEditor.TextChanged += action,
                 action => MarkupTextEditor.TextChanged -= action)
             .Throttle(TimeSpan.FromMilliseconds(500))
-            .ObserveOn(AvaloniaScheduler.Instance)
+            .ObserveOn(SynchronizationContext.Current)
             .Select(pattern => MarkupTextEditor.Text)
             .Subscribe(s => LoadMarkupOrPrintErrors(s));
         ResetButton.Click += ResetButtonOnClick;
@@ -122,7 +121,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
     }
 
     private XamlDisplay LocateXamlDisplay() =>
-        AssociatedObject.FindLogicalAncestorOfType<XamlDisplay>();
+        AssociatedObject!.FindLogicalAncestorOfType<XamlDisplay>()!;
 
     private class ErrorsElementGenerator : VisualLineElementGenerator {
         public int ExceptionPosition { get; set; } = -1;
@@ -141,6 +140,7 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
         private readonly string _exceptionText;
         public ErrorInfoInlineElement(int visualLength, int documentLength, string exceptionText) : base(visualLength, documentLength) {
             _exceptionText = exceptionText;
+            BackgroundBrush = Brushes.Transparent;
         }
         public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context) {
             if (context == null)
@@ -151,35 +151,33 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
     }
 
     private class ErrorInfoObjectRun : InlineObjectRun {
-        private static readonly ImmutableSolidColorBrush BackgroundSolidColorBrush = new(Colors.Red, 0.3);
+        private static readonly ImmutableSolidColorBrush BackgroundSolidColorBrush = new(Colors.Red);
         private static readonly PolylineGeometry PolylineGeometry = new() { Points = new Points { new(0, 5), new(5, 0), new(10, 5) } };
         private double? _cachedLineHeight;
         private TextView _textView = null!;
-        private ErrorInfoObjectRun(int length, TextRunProperties properties, IControl errorInfoTextBlock)
+        private ErrorInfoObjectRun(int length, TextRunProperties properties, Control errorInfoTextBlock)
             : base(length, properties, errorInfoTextBlock) { }
         public static ErrorInfoObjectRun CreateInstance(int length, TextRunProperties properties, string exceptionText, TextView contextTextView) {
-            var myRect = new ErrorInfoTextBlock(exceptionText, GetDefaultLineHeight(properties.FontMetrics));
+            var defaultLineHeight = properties.FontRenderingEmSize * 1.35;
+            var myRect = new ErrorInfoTextBlock(exceptionText, defaultLineHeight);
             var testInlineObjectRun = new ErrorInfoObjectRun(length, properties, myRect) { _textView = contextTextView };
             return testInlineObjectRun;
         }
 
         public override void Draw(DrawingContext drawingContext, Point origin) {
-            PolylineGeometry.Transform = new TranslateTransform(origin.X - 5, origin.Y + Math.Round(Properties.FontMetrics.LineHeight) - 3);
+            var lineSize = Math.Round(Properties!.FontRenderingEmSize * 1.35);
+            PolylineGeometry.Transform = new TranslateTransform(origin.X - 5, lineSize - 5);
             drawingContext.DrawGeometry(BackgroundSolidColorBrush, null, PolylineGeometry);
 
-            var defaultLineHeight = _cachedLineHeight ??= Math.Round(GetDefaultLineHeight(Properties.FontMetrics));
-            drawingContext.DrawRectangle(BackgroundSolidColorBrush, null, new Rect(0, origin.Y + defaultLineHeight, _textView.Bounds.Width, Element.DesiredSize.Height - defaultLineHeight));
-        }
-
-        private static double GetDefaultLineHeight(FontMetrics fontMetrics) {
-            // adding an extra 15% of the line height look good across different font sizes
-            var extraLineHeight = fontMetrics.LineHeight * 0.15;
-            return fontMetrics.LineHeight + extraLineHeight;
+            var defaultLineHeight = _cachedLineHeight ??= Math.Round(Properties.FontRenderingEmSize * 1.35);
+            drawingContext.DrawRectangle(BackgroundSolidColorBrush, null, new Rect(0, defaultLineHeight, _textView.Bounds.Width, Element.DesiredSize.Height - defaultLineHeight));
         }
     }
 
-    private class ErrorInfoTextBlock : TextBlock {
+    private class ErrorInfoTextBlock : SelectableTextBlock {
         private readonly double _defaultLineHeight;
+        private Rect _lastBounds;
+        private TextView? _textView;
         public ErrorInfoTextBlock(string text, double defaultLineHeight) {
             _defaultLineHeight = defaultLineHeight;
             Text = text;
@@ -188,16 +186,26 @@ public class XamlDisplayAvaloniaEditPopupBehavior : XamlDisplayAvaloniaEditTextB
             VerticalAlignment = VerticalAlignment.Top;
             TextWrapping = TextWrapping.Wrap;
             Margin = new Thickness(0, defaultLineHeight, 0, -defaultLineHeight);
+            Background = new SolidColorBrush(Colors.Red);
         }
         protected override Size MeasureOverride(Size availableSize) {
-            var textView = (TextView)this.GetVisualAncestors().FirstOrDefault(visual => visual is TextView)!;
-            var (_, height) = base.MeasureOverride(new Size(textView.Bounds.Width, double.PositiveInfinity));
-            return new Size(1, _defaultLineHeight + height);
+            var width = GetTextView().Bounds.Width;
+            var (_, height) = base.MeasureOverride(new Size(width, double.PositiveInfinity));
+            _lastBounds = new Rect(0, 0, width, height);
+            return new Size(0, _defaultLineHeight + height);
         }
 
         protected override void ArrangeCore(Rect finalRect) {
             base.ArrangeCore(finalRect);
             Bounds = Bounds.WithX(0);
         }
+
+        /// <inheritdoc />
+        protected override void RenderTextLayout(DrawingContext context, Point origin) {
+            if (Background != null) context.FillRectangle(Background, _lastBounds);
+            base.RenderTextLayout(context, origin);
+        }
+
+        private TextView GetTextView() => _textView ??= (TextView)this.GetVisualAncestors().FirstOrDefault(visual => visual is TextView)!;
     }
 }

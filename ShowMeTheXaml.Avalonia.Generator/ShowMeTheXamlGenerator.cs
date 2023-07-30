@@ -12,7 +12,6 @@ using ShowMeTheXaml.Avalonia.Infrastructure;
 namespace ShowMeTheXaml.Avalonia {
     [Generator]
     public class ShowMeTheXamlGenerator : ISourceGenerator {
-        private CSharpCompilation _compilation;
         public void Initialize(GeneratorInitializationContext context) { }
 
         public void Execute(GeneratorExecutionContext context) {
@@ -33,7 +32,6 @@ namespace ShowMeTheXaml.Avalonia {
             }
         }
         private void ExecuteInternal(GeneratorExecutionContext context) {
-            _compilation = (CSharpCompilation)context.Compilation;
             var codeDictionary = new Dictionary<string, (string XamlText, string FileName, Dictionary<string, string> Aliases)>();
             var files = context.AdditionalFiles.Where(text => text.Path.EndsWith(".xaml") || text.Path.EndsWith(".axaml")).ToList();
             if (files.Count == 0) {
@@ -50,7 +48,7 @@ namespace ShowMeTheXaml.Avalonia {
             }
 
             foreach (var markupFile in files) {
-                var infoResolver = new InfoResolver(_compilation);
+                var infoResolver = new InfoResolver((CSharpCompilation)context.Compilation);
                 var sources = markupFile.GetText() ?? throw new ArgumentNullException("markupFile.GetText()");
                 var xamlDisplayContainer = infoResolver.ResolveInfos(sources);
                 var xamlDisplayInfos = xamlDisplayContainer.XamlDisplayInfos
@@ -104,8 +102,5 @@ namespace ShowMeTheXaml.Avalonia {
                 Debugger.Launch();
             }
         }
-
-
-        
     }
 }

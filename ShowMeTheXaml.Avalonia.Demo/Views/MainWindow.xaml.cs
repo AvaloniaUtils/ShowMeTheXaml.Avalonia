@@ -10,16 +10,10 @@ using Avalonia.Markup.Xaml.Styling;
 using ShowMeTheXaml.Avalonia.Demo.Models;
 
 namespace ShowMeTheXaml.Avalonia.Demo.Views {
-    public class MainWindow : Window {
+    public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            DevTools.Attach(this, new KeyGesture(Key.F12));
         }
-
-        private void InitializeComponent() {
-            AvaloniaXamlLoader.Load(this);
-        }
-
 
         private void StyleSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             var styleSource = ((ComboBox)sender).SelectedIndex == 0
@@ -29,22 +23,20 @@ namespace ShowMeTheXaml.Avalonia.Demo.Views {
         }
 
         private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var theme = (CatalogTheme)((ComboBox)sender).SelectedItem!;
-            if (theme == CatalogTheme.FluentLight)
-            {
-                Application.Current!.Styles[0] = App.FluentLight;
+            try {
+                var theme = (CatalogTheme)((ComboBox)sender).SelectedItem!;
+                if (theme == CatalogTheme.Fluent)
+                {
+                    Application.Current!.Styles[0] = App.Fluent;
+                }
+                else if (theme == CatalogTheme.Simple)
+                {
+                    Application.Current!.Styles[0] = App.Simple;
+                }
             }
-            else if (theme == CatalogTheme.FluentDark)
-            {
-                Application.Current!.Styles[0] = App.FluentDark;
-            }
-            else if (theme == CatalogTheme.SimpleLight)
-            {
-                Application.Current!.Styles[0] = App.SimpleLight;
-            }
-            else if (theme == CatalogTheme.SimpleDark)
-            {
-                Application.Current!.Styles[0] = App.SimpleDark;
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                throw;
             }
         }
     }

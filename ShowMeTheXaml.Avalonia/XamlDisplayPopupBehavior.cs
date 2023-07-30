@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
@@ -13,7 +14,7 @@ using Avalonia.Xaml.Interactivity;
 
 namespace ShowMeTheXaml;
 
-public class XamlDisplayPopupBehavior : Behavior<IControl> {
+public class XamlDisplayPopupBehavior : Behavior<Control> {
     public static readonly DirectProperty<XamlDisplayPopupBehavior, Button> ApplyButtonProperty
         = AvaloniaProperty.RegisterDirect<XamlDisplayPopupBehavior, Button>("ApplyButton",
             o => o.ApplyButton,
@@ -61,7 +62,7 @@ public class XamlDisplayPopupBehavior : Behavior<IControl> {
         base.OnAttachedToVisualTree();
         _previewErrorsObservable = MarkupTextBox.GetObservable(TextBox.TextProperty)
             .Throttle(TimeSpan.FromMilliseconds(500))
-            .ObserveOn(AvaloniaScheduler.Instance)
+            .ObserveOn(SynchronizationContext.Current)
             .Subscribe(s => LoadMarkupOrPrintErrors(s));
         ResetButton.Click += ResetButtonOnClick;
         ApplyButton.Click += ApplyButtonOnClick;

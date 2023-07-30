@@ -15,7 +15,7 @@ namespace ShowMeTheXaml {
         public static readonly StyledProperty<string?> XamlTextProperty =
             AvaloniaProperty.Register<XamlDisplay, string?>(nameof(XamlText));
 
-        public static readonly StyledProperty<object> ContentProperty =
+        public static readonly StyledProperty<object?> ContentProperty =
             ContentControl.ContentProperty.AddOwner<Panel>();
 
         public static readonly StyledProperty<AlignmentY> XamlButtonAlignmentProperty =
@@ -32,7 +32,6 @@ namespace ShowMeTheXaml {
         private IDisposable? _buttonClickHandler;
         private Popup? _popup;
         private string _uniqueId = null!;
-        private AlignmentY _xamlButtonAlignment;
 
         public string UniqueId {
             get => _uniqueId;
@@ -48,7 +47,7 @@ namespace ShowMeTheXaml {
         }
 
         [Content]
-        public object Content {
+        public object? Content {
             get => GetValue(ContentProperty);
             set {
                 if (GetValue(ContentProperty) is ILogical oldLogical) LogicalChildren.Remove(oldLogical);
@@ -59,7 +58,7 @@ namespace ShowMeTheXaml {
 
         public AlignmentY XamlButtonAlignment {
             get => GetValue(XamlButtonAlignmentProperty);
-            set => SetAndRaise(XamlButtonAlignmentProperty, ref _xamlButtonAlignment, value);
+            set => SetValue(XamlButtonAlignmentProperty, value);
         }
 
         public Dictionary<string, string> CurrentFileNamespaceAliases =>
