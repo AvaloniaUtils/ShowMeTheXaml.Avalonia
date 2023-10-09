@@ -13,26 +13,13 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
   <StackPanel>
-    <Grid RowDefinitions="Auto Auto *">
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-        <ComboBox Name="StyleSelector"
-                  SelectionChanged="StyleSelector_OnSelectionChanged"
-                  Margin="4"
-                  SelectedIndex="0">
-          <ComboBoxItem>AvaloniaEdit Style</ComboBoxItem>
-          <ComboBoxItem>Default Style</ComboBoxItem>
-        </ComboBox>
-        <ComboBox x:Name="ThemeSelector"
-                  SelectionChanged="ThemeSelector_OnSelectionChanged"
-                  Margin="4"
-                  SelectedIndex="1">
-          <ComboBox.Items>
-            <models:CatalogTheme>Fluent</models:CatalogTheme>
-            <models:CatalogTheme>Simple</models:CatalogTheme>
-          </ComboBox.Items>
-        </ComboBox>
-      </StackPanel>
-    </Grid>
+    <ComboBox Name="StyleSelector" HorizontalAlignment="Center"
+              SelectionChanged="StyleSelector_OnSelectionChanged"
+              Margin="4"
+              SelectedIndex="0">
+      <ComboBoxItem>AvaloniaEdit Style</ComboBoxItem>
+      <ComboBoxItem>Default Style</ComboBoxItem>
+    </ComboBox>
 
     <showMeTheXaml:XamlDisplay UniqueId="123" HorizontalAlignment="Center">
       <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />

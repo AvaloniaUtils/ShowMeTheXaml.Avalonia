@@ -21,23 +21,5 @@ namespace ShowMeTheXaml.Avalonia.Demo.Views {
                 : App.XamlDisplayDefaultStyles;
             Application.Current!.Styles[1] = styleSource;
         }
-
-        private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
-            try {
-                var theme = (CatalogTheme)((ComboBox)sender).SelectedItem!;
-                if (theme == CatalogTheme.Fluent)
-                {
-                    Application.Current!.Styles[0] = App.Fluent;
-                }
-                else if (theme == CatalogTheme.Simple)
-                {
-                    Application.Current!.Styles[0] = App.Simple;
-                }
-            }
-            catch (Exception exception) {
-                Console.WriteLine(exception);
-                throw;
-            }
-        }
     }
 }
