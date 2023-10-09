@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ShowMeTheXaml.Avalonia.Demo"
+             xmlns:showMeTheXaml="clr-namespace:ShowMeTheXaml;assembly=ShowMeTheXaml.Avalonia"
              x:Class="ShowMeTheXaml.Avalonia.Demo.App">
   <Application.DataTemplates>
     <local:ViewLocator />
@@ -9,5 +10,8 @@
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://ShowMeTheXaml.Avalonia.AvaloniaEdit/XamlDisplayStyles.axaml" />
+    <Style Selector="showMeTheXaml|XamlDisplay">
+      <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
+    </Style>
   </Application.Styles>
 </Application>
