@@ -11,6 +11,7 @@
   <StyleInclude Source="avares://ShowMeTheXaml.Avalonia/XamlDisplay.xaml" />
   <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
   <Style Selector="showMeTheXaml|XamlDisplay">
+    <Setter Property="avaloniaEdit1:XamlDisplayAvaloniaEdit.CodeHighlightThemeName" Value="DarkPlus" />
     <Setter Property="Template">
       <ControlTemplate>
         <Grid ColumnDefinitions="*, Auto">
@@ -54,7 +55,6 @@
                                        MinWidth="300" MaxWidth="800"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Stretch"
-                                       SyntaxHighlighting="XML"
                                        HorizontalScrollBarVisibility="Disabled"
                                        VerticalScrollBarVisibility="Disabled"
                                        WordWrap="True"
@@ -63,6 +63,8 @@
                                        Background="{Binding $parent[showMeTheXaml:XamlDisplay].Background}">
                 <Interaction.Behaviors>
                   <avaloniaEdit1:CustomizeEditorBehavior />
+                  <avaloniaEdit1:XamlDisplayAvaloniaEditThemeBehavior
+                    CodeHighlightThemeName="{Binding $parent[showMeTheXaml:XamlDisplay].(avaloniaEdit1:XamlDisplayAvaloniaEdit.CodeHighlightThemeName)}" />
                 </Interaction.Behaviors>
               </avaloniaEdit:TextEditor>
             </ScrollViewer>
@@ -111,7 +113,6 @@
                                      MinWidth="300" MaxWidth="800"
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Stretch"
-                                     SyntaxHighlighting="XML"
                                      HorizontalScrollBarVisibility="Disabled"
                                      VerticalScrollBarVisibility="Disabled"
                                      WordWrap="True"
@@ -122,6 +123,8 @@
                 <avaloniaEdit1:CustomizeEditorBehavior />
                 <avaloniaEdit1:XamlDisplayAvaloniaEditTextBindingBehavior
                   MarkupTextEditor="{Binding ElementName=MarkupTextEditor}" />
+                <avaloniaEdit1:XamlDisplayAvaloniaEditThemeBehavior
+                  CodeHighlightThemeName="{Binding $parent[showMeTheXaml:XamlDisplay].(avaloniaEdit1:XamlDisplayAvaloniaEdit.CodeHighlightThemeName)}" />
               </Interaction.Behaviors>
             </avaloniaEdit:TextEditor>
           </ScrollViewer>
