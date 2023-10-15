@@ -63,8 +63,7 @@
                                        Background="{Binding $parent[showMeTheXaml:XamlDisplay].Background}">
                 <Interaction.Behaviors>
                   <avaloniaEdit1:CustomizeEditorBehavior />
-                  <avaloniaEdit1:XamlDisplayAvaloniaEditThemeBehavior
-                    CodeHighlightThemeName="{Binding (avaloniaEdit1:XamlDisplayAvaloniaEdit.CodeHighlightThemeName), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=showMeTheXaml:XamlDisplay}}" />
+                  <avaloniaEdit1:XamlDisplayAvaloniaEditThemeBehavior />
                 </Interaction.Behaviors>
               </avaloniaEdit:TextEditor>
             </ScrollViewer>
@@ -123,8 +122,7 @@
                 <avaloniaEdit1:CustomizeEditorBehavior />
                 <avaloniaEdit1:XamlDisplayAvaloniaEditTextBindingBehavior
                   MarkupTextEditor="{Binding ElementName=MarkupTextEditor}" />
-                <avaloniaEdit1:XamlDisplayAvaloniaEditThemeBehavior
-                  CodeHighlightThemeName="{Binding (avaloniaEdit1:XamlDisplayAvaloniaEdit.CodeHighlightThemeName), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=showMeTheXaml:XamlDisplay}}" />
+                <avaloniaEdit1:XamlDisplayAvaloniaEditThemeBehavior />
               </Interaction.Behaviors>
             </avaloniaEdit:TextEditor>
           </ScrollViewer>

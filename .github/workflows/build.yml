@@ -3,9 +3,9 @@ name: CI Build
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  BUILD_VERSION: 1.4.0
+  BUILD_VERSION: 1.4.1
   PACKAGE_RELEASE_NOTES: |
-    Add customizable syntax highlighting for AvaloniaEdit
+    Fixes CodeHighlightThemeNameProperty resolving
 # NOTE: Instead of , use %2c
 
 on:
