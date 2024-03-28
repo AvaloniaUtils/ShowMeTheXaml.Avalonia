@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -20,9 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0" />
-      <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.0" />
-      <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.0" />
+      <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.10.2" />
+      <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
+      <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.6" />
     </ItemGroup>
 
     <ItemGroup>
