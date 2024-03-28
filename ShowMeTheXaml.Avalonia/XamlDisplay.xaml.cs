@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -24,14 +25,19 @@ namespace ShowMeTheXaml {
         public static readonly StyledProperty<bool> IsEditableProperty = 
             AvaloniaProperty.Register<XamlDisplay, bool>("IsEditable", true);
 
+        private IDisposable? _buttonClickHandler;
+        private Popup? _popup;
+        private string _uniqueId = null!;
+
+        public XamlDisplay()
+        {
+            IsEditable = RuntimeFeature.IsDynamicCodeSupported;
+        }
+
         public bool IsEditable {
             get => GetValue(IsEditableProperty);
             set => SetValue(IsEditableProperty, value);
         }
-
-        private IDisposable? _buttonClickHandler;
-        private Popup? _popup;
-        private string _uniqueId = null!;
 
         public string UniqueId {
             get => _uniqueId;
