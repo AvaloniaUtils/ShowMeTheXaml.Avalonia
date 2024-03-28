@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Logging;
 using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 using Avalonia.Xaml.Interactivity;
@@ -21,14 +22,24 @@ public class XamlDisplayAvaloniaEditThemeBehavior : Behavior<TextEditor> {
         var xamlDisplay = AssociatedObject.FindLogicalAncestorOfType<XamlDisplay>()!;
         var themeName = xamlDisplay.GetValue(XamlDisplayAvaloniaEdit.CodeHighlightThemeNameProperty);
 
-        _registryOptions = new RegistryOptions(themeName);
-        _textMateInstallation = AssociatedObject!.InstallTextMate(_registryOptions);
-        _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId("xml"));
+        try
+        {
+            _registryOptions = new RegistryOptions(themeName);
+            _textMateInstallation = AssociatedObject!.InstallTextMate(_registryOptions);
+            _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId("xml"));
 
-        _disposable = xamlDisplay.GetObservable(XamlDisplayAvaloniaEdit.CodeHighlightThemeNameProperty)
-            .Subscribe(name => {
-                _textMateInstallation.SetTheme(_registryOptions.LoadTheme(name));
-            });
+            _disposable = xamlDisplay.GetObservable(XamlDisplayAvaloniaEdit.CodeHighlightThemeNameProperty)
+                .Subscribe(name => {
+                    _textMateInstallation.SetTheme(_registryOptions.LoadTheme(name));
+                });
+        }
+        catch (Exception e)
+        {
+            if (Logger.TryGet(LogEventLevel.Warning, "ShowMeTheXaml.AvaloniaEdit", out var logger))
+            {
+                logger.Log(this, "TextMate highlighting can't be loaded. {Exception}", e);
+            }
+        }
     }
 
     /// <inheritdoc />
