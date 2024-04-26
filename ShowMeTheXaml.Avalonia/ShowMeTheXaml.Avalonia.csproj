@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,6 +13,7 @@
         <RepositoryType>Git</RepositoryType>
         <PackageTags>avalonia avaloniaui</PackageTags>
         <RootNamespace>ShowMeTheXaml</RootNamespace>
+        <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
