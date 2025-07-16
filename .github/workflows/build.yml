@@ -1,47 +1,17 @@
-name: CI Build
-
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
-  BUILD_VERSION: 1.5.1
-  PACKAGE_RELEASE_NOTES: |
-    Downgrade source generator TFM to netstandard2.0 to bypass the VS bullshit
-# NOTE: Instead of , use %2c
+name: Build and publish
 
 on:
   push:
-  pull_request:
     branches:
-      - '**:**'
+      - !master
+      - !main
+      - !release/**
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          submodules: 'recursive'
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8
-      - uses: actions/cache@v1
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Append ci info to version
-        if: ${{ github.ref != 'refs/heads/master' && !contains(github.ref, 'rc/') }}
-        run: |
-          echo "BUILD_VERSION=$BUILD_VERSION-ci$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
-          echo "PACKAGE_RELEASE_NOTES=This is the package for CI build $GITHUB_RUN_ID" >> $GITHUB_ENV
-      - name: Build with dotnet
-        run: dotnet build --no-restore --configuration Release /property:Version=$BUILD_VERSION /property:PackageReleaseNotes="$PACKAGE_RELEASE_NOTES"
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: nupkg
-          path: '**/*.nupkg'
+  build-and-test:
+    uses: SKProCH/CommonWorkflows/.github/workflows/build-publish.yml@main
+    secrets:
+      NUGET_KEY: "NONE"
+    with:
+      only-build: true
+      dotnet-version: 8
