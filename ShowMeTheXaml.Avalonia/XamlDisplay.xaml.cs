@@ -121,8 +121,8 @@ namespace ShowMeTheXaml
         {
             get => _displayContent
                    ?? throw new NullReferenceException(
-                       "Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
-                       "Also check \"Getting started\" on our Github");
+                       "Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData. " +
+                       "Check out \"Getting started\" on our Github for more information");
             set => _displayContent = value;
         }
 
@@ -130,8 +130,8 @@ namespace ShowMeTheXaml
         {
             get => _xamlFilesNamespaceAliases
                    ?? throw new NullReferenceException(
-                       "Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData" +
-                       "Also check \"Getting started\" on our Github");
+                       "Install ShowMeTheXaml.Avalonia.Generator and call XamlDisplayInternalData.RegisterXamlDisplayData. " +
+                       "Check out \"Getting started\" on our Github for more information");
             set => _xamlFilesNamespaceAliases = value;
         }
 
