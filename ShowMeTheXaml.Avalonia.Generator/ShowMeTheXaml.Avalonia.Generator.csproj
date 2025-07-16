@@ -3,8 +3,6 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>12</LangVersion>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsRoslynComponent>true</IsRoslynComponent>
         <RootNamespace>ShowMeTheXaml.Avalonia</RootNamespace>
         <Title>ShowMeTheXaml.Avalonia.Generator</Title>

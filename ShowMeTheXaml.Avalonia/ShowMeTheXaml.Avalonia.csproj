@@ -3,7 +3,6 @@
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>ShowMeTheXaml.Avalonia</Title>
         <Authors>SKProCH</Authors>
         <Description>Package contains Avalonia control that can display xaml code from ShowMeTheXaml.Avalonia.Generator</Description>
