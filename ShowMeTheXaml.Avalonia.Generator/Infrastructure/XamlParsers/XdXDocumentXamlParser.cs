@@ -156,7 +156,7 @@ internal class XdXDocumentXamlParser {
 
                     i.Children.Add(new XamlAstXamlPropertyValueNode(el.AsLi(),
                         new XamlAstNamePropertyReference(el.AsLi(), ptype, pname, type),
-                        ParseTextValueOrMarkupExtension(attr.Value, el, attr.AsLi())));
+                        ParseTextValueOrMarkupExtension(attr.Value, el, attr.AsLi()), true));
                 }
             }
 
@@ -172,7 +172,8 @@ internal class XdXDocumentXamlParser {
                             new XamlAstXmlTypeReference(el.AsLi(), elementNode.Name.NamespaceName,
                                 pair[0]), pair[1], type
                         ),
-                        ParseValueNodeChildren(elementNode, spaceMode)
+                        ParseValueNodeChildren(elementNode, spaceMode),
+                        true
                     ));
                 }
                 else {

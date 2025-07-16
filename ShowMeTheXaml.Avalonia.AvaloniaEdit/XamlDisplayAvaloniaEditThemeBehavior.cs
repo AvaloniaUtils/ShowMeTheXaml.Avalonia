@@ -2,7 +2,6 @@ using System;
 using Avalonia;
 using Avalonia.Logging;
 using Avalonia.LogicalTree;
-using Avalonia.VisualTree;
 using Avalonia.Xaml.Interactivity;
 using AvaloniaEdit;
 using AvaloniaEdit.TextMate;

@@ -33,7 +33,8 @@ namespace ShowMeTheXaml.Avalonia.Infrastructure
             Transformers.Add(new TypeReferenceResolver());
         }
 
-        protected override XamlEmitContext<object, IXamlEmitResult> InitCodeGen(IFileSource file, Func<string, IXamlType, IXamlTypeBuilder<object>> createSubType, Func<string, IXamlType, IEnumerable<IXamlType>, IXamlTypeBuilder<object>> createDelegateType, object codeGen, XamlRuntimeContext<object, IXamlEmitResult> context, bool needContextLocal)
+        protected override XamlEmitContext<object, IXamlEmitResult> InitCodeGen(IFileSource file, IXamlTypeBuilder<object> declaringType, object codeGen,
+            XamlRuntimeContext<object, IXamlEmitResult> context, bool needContextLocal)
             => throw new NotSupportedException();
     }
 }

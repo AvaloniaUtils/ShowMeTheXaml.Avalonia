@@ -5,11 +5,8 @@ using System.Threading;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using Avalonia.Threading;
-using Avalonia.VisualTree;
 using Avalonia.Xaml.Interactivity;
 
 namespace ShowMeTheXaml;
@@ -60,7 +57,8 @@ public class XamlDisplayPopupBehavior : Behavior<Control> {
 
     protected override void OnAttachedToVisualTree() {
         base.OnAttachedToVisualTree();
-        _previewErrorsObservable = MarkupTextBox.GetObservable(TextBox.TextProperty)
+        _previewErrorsObservable = MarkupTextBox
+            .GetObservable(TextBox.TextProperty)
             .Throttle(TimeSpan.FromMilliseconds(500))
             .ObserveOn(SynchronizationContext.Current)
             .Subscribe(s => LoadMarkupOrPrintErrors(s));

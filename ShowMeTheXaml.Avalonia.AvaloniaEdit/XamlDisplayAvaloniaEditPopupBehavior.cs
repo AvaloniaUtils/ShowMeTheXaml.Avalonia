@@ -12,7 +12,6 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit.Rendering;
 
