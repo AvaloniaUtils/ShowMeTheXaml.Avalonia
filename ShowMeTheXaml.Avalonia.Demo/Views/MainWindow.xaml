@@ -7,6 +7,7 @@
         xmlns:models="clr-namespace:ShowMeTheXaml.Avalonia.Demo.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ShowMeTheXaml.Avalonia.Demo.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ShowMeTheXaml.Avalonia.Demo">
   <Design.DataContext>

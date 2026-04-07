@@ -12,7 +12,7 @@
         <RepositoryType>Git</RepositoryType>
         <PackageTags>avalonia avaloniaui</PackageTags>
         <RootNamespace>ShowMeTheXaml</RootNamespace>
-        <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,10 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.3.2" />
-        <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.2" />
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6" />
-        <PackageReference Include="System.Reactive.Linq" Version="6.0.1" />
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
+        <PackageReference Include="Xaml.Behaviors.Avalonia" />
+        <PackageReference Include="System.Reactive.Linq" />
     </ItemGroup>
 
 </Project>

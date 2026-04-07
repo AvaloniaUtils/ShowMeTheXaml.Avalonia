@@ -1,5 +1,5 @@
 ﻿using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 
 namespace ShowMeTheXaml.Avalonia.Demo {
     class Program {
@@ -15,6 +15,6 @@ namespace ShowMeTheXaml.Avalonia.Demo {
                          .UsePlatformDetect()
                          .LogToTrace()
                          .UseXamlDisplay()
-                         .UseReactiveUI();
+                         .UseReactiveUI(_ => { });
     }
 }

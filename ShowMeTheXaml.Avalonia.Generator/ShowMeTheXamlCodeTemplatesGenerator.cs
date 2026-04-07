@@ -65,13 +65,13 @@ public static class ShowMeTheXamlCodeTemplatesGenerator {
             => string.Format(DataEntryTemplate, ToLiteral(pair.Key), ToLiteral(pair.Value.XamlText), ToLiteral(pair.Value.FileName));
 
         string FormatNamespaceAliasEntry(IGrouping<string, KeyValuePair<string, (string XamlText, string FileName, Dictionary<string, string> Aliases)>> pair)
-            => string.Format(NamespaceAliasesEntryTemplate, ToLiteral(pair.Key), string.Join(Environment.NewLine, pair.First().Value.Aliases.Select(FormatAliasEntry)));
+            => string.Format(NamespaceAliasesEntryTemplate, ToLiteral(pair.Key), string.Join("\n", pair.First().Value.Aliases.Select(FormatAliasEntry)));
 
         string FormatAliasEntry(KeyValuePair<string, string> valuePair)
             => string.Format(AliasEntryTemplate, ToLiteral(valuePair.Key), ToLiteral(valuePair.Value));
 
-        var dataText = string.Join(Environment.NewLine, data.Select(FormatDataEntry));
-        var namespaceAliasesText = string.Join(Environment.NewLine, data.GroupBy(pair => pair.Value.FileName).Select(FormatNamespaceAliasEntry));
+        var dataText = string.Join("\n", data.Select(FormatDataEntry));
+        var namespaceAliasesText = string.Join("\n", data.GroupBy(pair => pair.Value.FileName).Select(FormatNamespaceAliasEntry));
         return string.Format(XamlDisplayInternalDataTemplate, dataText, namespaceAliasesText);
     }
 

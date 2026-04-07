@@ -1,38 +1,39 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\" />
+        <Folder Include="Models\"/>
         <Compile Update="**\*.xaml.cs">
             <DependentUpon>%(Filename)</DependentUpon>
         </Compile>
         <AvaloniaResource Include="**\*.xaml">
             <SubType>Designer</SubType>
         </AvaloniaResource>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.3.2" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.2" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.2" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.2" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.2" />
+        <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Avalonia.Desktop"/>
+        <PackageReference Include="Avalonia.Themes.Fluent"/>
+        <PackageReference Include="Avalonia.Themes.Simple"/>
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport"/>
+        <PackageReference Include="ReactiveUI.Avalonia"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.AvaloniaEdit\ShowMeTheXaml.Avalonia.AvaloniaEdit.csproj" />
-        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.Generator\ShowMeTheXaml.Avalonia.Generator.csproj" OutputItemType="Analyzer" />
-        <ProjectReference Include="..\ShowMeTheXaml.Avalonia\ShowMeTheXaml.Avalonia.csproj" />
+        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.AvaloniaEdit\ShowMeTheXaml.Avalonia.AvaloniaEdit.csproj"/>
+        <ProjectReference Include="..\ShowMeTheXaml.Avalonia.Generator\ShowMeTheXaml.Avalonia.Generator.csproj" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\ShowMeTheXaml.Avalonia\ShowMeTheXaml.Avalonia.csproj"/>
     </ItemGroup>
-    
-    
+
+
     <!--     This is can be done automatically if you use NuGet package -->
     <!--    In our case we reference generator project manually and should add xaml and axaml manually-->
     <ItemGroup>
-        <AdditionalFiles Include="**\*.xaml" />
-        <AdditionalFiles Include="**\*.axaml" />
+        <AdditionalFiles Include="**\*.xaml"/>
+        <AdditionalFiles Include="**\*.axaml"/>
     </ItemGroup>
 </Project>
