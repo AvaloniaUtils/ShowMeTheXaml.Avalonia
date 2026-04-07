@@ -1,0 +1,33 @@
+name: Build and publish
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - release/**
+    paths-ignore:
+      - ShowMeTheXaml.Avalonia.Demo*/**
+    tags:
+      - v**
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  build:
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      -   uses: actions/checkout@v4
+      -   name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: 10
+      -   name: Build and Publish
+          uses: SKProCH/CommonWorkflows/actions/build-publish@main
+          with:
+            publish-nightly: true
+            nuget-user: ${{ secrets.NUGET_USER }}
